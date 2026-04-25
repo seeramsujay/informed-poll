@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+lancedb
+google-cloud-firestore
+google-cloud-aiplatform
+firebase-admin
+pandas
+pydantic
+pydantic-settings
+python-multipart
+python-dotenv
+pytest
+httpx
