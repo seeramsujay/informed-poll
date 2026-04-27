@@ -1,6 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2 } from 'lucide-react';
-import { initialMessages } from '../data/mock';
+import { Send, Bot, User, Loader2, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const initialMessages = [
+  { id: 1, text: "Yo! Ready to get registered? Ask me anything about IDs, deadlines, or how to vote from your dorm.", sender: 'ai' }
+];
+
+const mockReplies = [
+  "I've got the data on that. Based on your location, you've got until Oct 26th to register online.",
+  "Yo! That's a common one. You can definitely use your student ID if it has a photo and signature.",
+  "Check the map—your closest polling place is the Student Union, Room 302."
+];
 
 const ChatAssistant = () => {
   const [messages, setMessages] = useState(initialMessages);
@@ -14,83 +24,97 @@ const ChatAssistant = () => {
     }
   }, [messages]);
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const handleSend = (text) => {
+    const messageText = typeof text === 'string' ? text : input;
+    if (!messageText.trim() || isLoading) return;
 
-    const userMsg = { id: Date.now(), text: input, sender: 'user' };
+    const userMsg = { id: Date.now(), text: messageText, sender: 'user' };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
 
-    // Mock response logic (Phase 1)
     setTimeout(() => {
       const aiMsg = { 
         id: Date.now() + 1, 
-        text: "That's a great question about policy. Our data shows that most candidates are focusing on technology and urban development this cycle. Would you like to compare their specific proposals?", 
+        text: mockReplies[Math.floor(Math.random() * mockReplies.length)], 
         sender: 'ai' 
       };
       setMessages(prev => [...prev, aiMsg]);
       setIsLoading(false);
-    }, 1500);
+    }, 1000);
   };
 
   return (
-    <div className="bg-slate-800/30 rounded-[32px] border border-slate-800/50 flex flex-col h-[500px] overflow-hidden">
-      <div className="p-6 border-b border-slate-800 flex items-center gap-3 bg-slate-900/40">
-        <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-          <Bot className="w-6 h-6 text-white" />
-        </div>
-        <div>
-          <h3 className="font-display uppercase tracking-wider">Voting Assistant</h3>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Always Online</span>
-          </div>
-        </div>
+    <div className="glass-card flex flex-col h-[600px] border-none shadow-2xl">
+      <div className="p-4 flex items-center gap-3 bg-white/5 border-b border-white/5">
+        <div className="w-2 h-2 rounded-full bg-[var(--secondary)] animate-pulse"></div>
+        <span className="font-bold text-[10px] uppercase tracking-widest text-white/60">VoteIQ AI Assistant</span>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-hide">
-        {messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed ${
-              msg.sender === 'user' 
-                ? 'bg-blue-600 text-white rounded-tr-none' 
-                : 'bg-slate-800 text-slate-300 rounded-tl-none border border-slate-700'
-            }`}>
-              {msg.text}
-            </div>
-          </div>
-        ))}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
+        <AnimatePresence>
+          {messages.map((msg) => (
+            <motion.div 
+              key={msg.id} 
+              initial={{ opacity: 0, x: msg.sender === 'user' ? 20 : -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
+                msg.sender === 'user' 
+                  ? 'bg-[var(--primary)] text-white rounded-tr-none shadow-lg' 
+                  : 'glass border-l-2 border-l-[var(--secondary)] text-[var(--on-surface)] rounded-tl-none'
+              }`}>
+                {msg.text}
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-slate-800 border border-slate-700 p-4 rounded-2xl rounded-tl-none flex gap-2">
-              <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-              <span className="text-xs text-slate-500">Processing insights...</span>
+            <div className="glass p-4 rounded-2xl rounded-tl-none border-l-2 border-l-[var(--secondary)] flex gap-3 items-center">
+              <Loader2 className="w-4 h-4 animate-spin text-[var(--secondary)]" />
+              <span className="text-sm text-white/60">Thinking...</span>
             </div>
           </div>
         )}
       </div>
 
-      <form onSubmit={handleSend} className="p-6 pt-0 mt-auto">
-        <div className="relative">
+      <div className="p-4 bg-white/5 space-y-4">
+        <div className="flex gap-2 flex-wrap">
+          <button 
+            onClick={() => handleSend('What ID do I need?')}
+            className="glass px-3 py-1.5 rounded-full text-[10px] font-bold uppercase hover:bg-[var(--secondary)]/20 transition-all border-[var(--secondary)]/30"
+          >
+            ID Requirements?
+          </button>
+          <button 
+            onClick={() => handleSend('Deadline in NY?')}
+            className="glass px-3 py-1.5 rounded-full text-[10px] font-bold uppercase hover:bg-[var(--secondary)]/20 transition-all border-[var(--secondary)]/30"
+          >
+            Deadlines
+          </button>
+        </div>
+        <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="relative group">
           <input 
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask anything about the election..."
-            className="w-full bg-slate-900 border border-slate-700 rounded-2xl py-4 pl-6 pr-14 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+            placeholder="Ask about your state's rules..."
+            className="w-full bg-[#100d16] border border-neutral-800 rounded-xl py-3 pl-5 pr-12 text-sm text-white focus:ring-1 focus:ring-[var(--secondary)] focus:border-[var(--secondary)] transition-all outline-none"
           />
           <button 
             type="submit"
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white hover:bg-blue-500 transition-all active:scale-95"
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[var(--secondary)] text-[var(--surface)] rounded-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-4 h-4" />
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
 
 export default ChatAssistant;
+

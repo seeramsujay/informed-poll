@@ -1,64 +1,80 @@
 import React from 'react';
-import { Vote, Twitter, Github, Linkedin } from 'lucide-react';
+import { Zap, MessageCircle, Globe, Network, Cpu } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="border-t border-slate-800 pt-24 pb-12">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-1 md:col-span-1 space-y-6">
-            <div className="flex items-center gap-2">
-              <div className="bg-purple-600 p-1.5 rounded-lg">
-                <Vote className="w-5 h-5 text-white" />
+    <footer className="mt-32 border-t border-white/5 bg-black/40 backdrop-blur-xl pt-32 pb-12 overflow-hidden relative">
+      <div className="absolute top-0 right-0 w-[50%] h-[1px] bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent opacity-50" />
+      
+      <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-32">
+          
+          <div className="md:col-span-4 space-y-8">
+            <div className="flex items-center gap-4">
+              <div className="bg-[var(--primary)] p-2 rounded-xl">
+                <Zap className="w-6 h-6 text-white fill-white" />
               </div>
-              <span className="text-xl font-display tracking-wider">VOTE<span className="text-purple-500">IQ</span></span>
+              <span className="text-3xl font-display tracking-tighter leading-none italic">
+                INFORMED <span className="text-[var(--primary)]">POLL</span>
+              </span>
             </div>
-            <p className="text-slate-500 text-sm leading-relaxed">
-              Empowering citizens with data-driven insights and AI assistance for a more informed democracy.
+            <p className="text-white/40 text-sm leading-relaxed max-w-sm uppercase tracking-wider font-medium">
+              Architecting the future of democratic participation through high-fidelity data synthesis and autonomous neural verification.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="p-2 bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"><Twitter className="w-4 h-4" /></a>
-              <a href="#" className="p-2 bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"><Github className="w-4 h-4" /></a>
-              <a href="#" className="p-2 bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"><Linkedin className="w-4 h-4" /></a>
+              {[MessageCircle, Globe, Network].map((Icon, i) => (
+                <a key={i} href="#" className="w-12 h-12 flex items-center justify-center border border-white/10 rounded-none hover:bg-[var(--primary)] hover:border-[var(--primary)] transition-all">
+                  <Icon className="w-5 h-5 text-white" />
+                </a>
+              ))}
             </div>
           </div>
           
-          <div className="space-y-6">
-            <h4 className="font-display uppercase tracking-widest text-slate-200">Product</h4>
-            <ul className="space-y-3 text-sm text-slate-500">
-              <li><a href="#" className="hover:text-purple-400">Analysis</a></li>
-              <li><a href="#" className="hover:text-purple-400">Comparisons</a></li>
-              <li><a href="#" className="hover:text-purple-400">Verification</a></li>
-              <li><a href="#" className="hover:text-purple-400">Security</a></li>
+          <div className="md:col-span-2 space-y-8">
+            <h4 className="font-display text-2xl uppercase italic tracking-tighter text-white">System</h4>
+            <ul className="space-y-4 text-xs font-bold uppercase tracking-[0.2em] text-white/40">
+              <li><a href="#" className="hover:text-[var(--primary)] transition-colors">Neural-Net</a></li>
+              <li><a href="#" className="hover:text-[var(--primary)] transition-colors">Ledger-Auth</a></li>
+              <li><a href="#" className="hover:text-[var(--primary)] transition-colors">Sync-Status</a></li>
+              <li><a href="#" className="hover:text-[var(--primary)] transition-colors">Core-Protocol</a></li>
             </ul>
           </div>
           
-          <div className="space-y-6">
-            <h4 className="font-display uppercase tracking-widest text-slate-200">Resources</h4>
-            <ul className="space-y-3 text-sm text-slate-500">
-              <li><a href="#" className="hover:text-purple-400">Help Center</a></li>
-              <li><a href="#" className="hover:text-purple-400">Election Dates</a></li>
-              <li><a href="#" className="hover:text-purple-400">Poll Locations</a></li>
-              <li><a href="#" className="hover:text-purple-400">API Docs</a></li>
+          <div className="md:col-span-2 space-y-8">
+            <h4 className="font-display text-2xl uppercase italic tracking-tighter text-white">Archives</h4>
+            <ul className="space-y-4 text-xs font-bold uppercase tracking-[0.2em] text-white/40">
+              <li><a href="#" className="hover:text-[var(--primary)] transition-colors">Manifesto</a></li>
+              <li><a href="#" className="hover:text-[var(--primary)] transition-colors">Whitepaper</a></li>
+              <li><a href="#" className="hover:text-[var(--primary)] transition-colors">Node-Maps</a></li>
+              <li><a href="#" className="hover:text-[var(--primary)] transition-colors">Legal-Void</a></li>
             </ul>
           </div>
           
-          <div className="space-y-6">
-            <h4 className="font-display uppercase tracking-widest text-slate-200">Newsletter</h4>
-            <p className="text-sm text-slate-500">Stay informed with weekly election summaries.</p>
-            <div className="flex gap-2">
-              <input type="text" placeholder="Email" className="bg-slate-900 border border-slate-800 rounded-lg px-4 py-2 text-xs w-full focus:outline-none focus:border-purple-500" />
-              <button className="bg-purple-600 px-4 py-2 rounded-lg text-xs font-bold text-white">Join</button>
+          <div className="md:col-span-4 space-y-8">
+            <h4 className="font-display text-2xl uppercase italic tracking-tighter text-white">Neural Subscription</h4>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/40">Direct-to-mind update stream.</p>
+            <div className="flex gap-0">
+              <input 
+                type="text" 
+                placeholder="USER@IDENT.NET" 
+                className="bg-white/5 border border-white/10 border-r-0 px-6 py-4 text-xs font-bold uppercase tracking-widest w-full focus:outline-none focus:border-[var(--primary)] transition-colors" 
+              />
+              <button className="bg-[var(--primary)] px-8 py-4 text-xs font-black uppercase tracking-widest text-white hover:bg-[var(--secondary)] transition-colors">
+                Link
+              </button>
             </div>
           </div>
         </div>
         
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-800 gap-4 text-[10px] uppercase font-bold tracking-widest text-slate-600">
-          <p>© 2026 VOTEIQ TECHNOLOGIES. ALL RIGHTS RESERVED.</p>
-          <div className="flex gap-8">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Cookie Policy</a>
+        <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/5 gap-8">
+          <div className="flex items-center gap-4 text-[10px] font-black tracking-[0.4em] text-white/20 uppercase">
+            <Cpu className="w-4 h-4" />
+            <p>© 2026 INFORMED POLL // KINETIC-CORE. NO RIGHTS RESERVED.</p>
+          </div>
+          <div className="flex gap-12 text-[10px] font-black tracking-[0.4em] text-white/20 uppercase">
+            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+            <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <a href="#" className="hover:text-white transition-colors">Protocol</a>
           </div>
         </div>
       </div>
@@ -67,3 +83,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

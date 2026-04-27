@@ -1,28 +1,48 @@
 import React from 'react';
-import { Vote } from 'lucide-react';
+import { Vote, Menu, Zap } from 'lucide-react';
 
 const Navbar = () => {
   return (
-    <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="bg-purple-600 p-1.5 rounded-lg">
-            <Vote className="w-6 h-6 text-white" />
+    <nav className="glass sticky top-0 z-[100] border-x-0 border-t-0 border-b border-white/10">
+      <div className="max-w-[1800px] mx-auto px-6 lg:px-12 h-24 flex items-center justify-between">
+        <div className="flex items-center gap-4 group cursor-pointer">
+          <div className="bg-[var(--primary)] p-2.5 rounded-xl neon-glow-primary transform group-hover:rotate-12 transition-transform">
+            <Zap className="w-7 h-7 text-white fill-white" />
           </div>
-          <span className="text-2xl font-display tracking-wider">VOTE<span className="text-purple-500">IQ</span></span>
+          <div className="flex flex-col">
+            <span className="text-3xl font-display tracking-tighter leading-none italic">
+              INFORMED <span className="text-[var(--primary)]">POLL</span>
+            </span>
+            <span className="text-[10px] font-bold tracking-[0.3em] text-white/40 uppercase leading-none mt-1">
+              Decentralized Consensus V4.2
+            </span>
+          </div>
         </div>
         
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-          <a href="#" className="hover:text-purple-400 transition-colors">Candidates</a>
-          <a href="#" className="hover:text-purple-400 transition-colors">Process</a>
-          <a href="#" className="hover:text-purple-400 transition-colors">Results</a>
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/20">
-            Get Started
+        <div className="hidden lg:flex items-center gap-12 text-sm font-bold uppercase tracking-widest">
+          {['Candidates', 'Protocols', 'Neural-Sync'].map((item) => (
+            <a 
+              key={item}
+              href={`#${item.toLowerCase()}`} 
+              className="relative text-white/70 hover:text-[var(--primary)] transition-colors group"
+            >
+              {item}
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--primary)] transition-all group-hover:w-full"></span>
+            </a>
+          ))}
+          
+          <button className="relative overflow-hidden bg-white text-black px-8 py-3 rounded-none font-display text-xl uppercase italic hover:bg-[var(--primary)] hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(110,0,255,0.3)]">
+            Connect Identity
           </button>
         </div>
+
+        <button className="lg:hidden p-2 text-white">
+          <Menu className="w-8 h-8" />
+        </button>
       </div>
     </nav>
   );
 };
 
 export default Navbar;
+

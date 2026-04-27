@@ -11,3 +11,4 @@ lancedb/poll_context/
 *.log
 .pytest_cache/
 .DS_Store
+.agent/

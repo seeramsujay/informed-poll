@@ -1,41 +1,79 @@
 import React from 'react';
-import { ChevronRight, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronRight, Zap } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden pt-12 pb-24">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-600/20 rounded-full blur-[128px] animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[128px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+    <section className="relative pt-20 pb-32 overflow-visible">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] -z-10 pointer-events-none">
+        <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] bg-[var(--primary)]/30 rounded-full blur-[160px] animate-pulse"></div>
+        <div className="absolute bottom-0 right-[10%] w-[600px] h-[600px] bg-[var(--secondary)]/20 rounded-full blur-[180px]" style={{ animationDelay: '2s' }}></div>
       </div>
       
-      <div className="text-center space-y-8 max-w-4xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/50 border border-slate-700 text-sm font-medium text-purple-300 animate-float">
-          <Sparkles className="w-4 h-4" />
-          <span>Next Generation Democracy</span>
-        </div>
-        
-        <h1 className="text-6xl md:text-8xl font-display leading-[0.9] tracking-tighter">
-          YOUR VOTE, <br />
-          <span className="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent italic">ONLY SMARTER.</span>
-        </h1>
-        
-        <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          Cut through the noise with AI-powered candidate analysis, real-time policy tracking, and personalized voting roadmaps.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <button className="w-full sm:w-auto bg-white text-slate-900 px-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-purple-50 transition-all hover:-translate-y-1 shadow-2xl">
-            Start My Journey
-            <ChevronRight className="w-5 h-5" />
-          </button>
-          <button className="w-full sm:w-auto bg-slate-800 text-white px-8 py-4 rounded-2xl font-bold text-lg border border-slate-700 hover:bg-slate-700 transition-all">
-            View Live Results
-          </button>
-        </div>
+      <div className="max-w-6xl mx-auto px-4 relative">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="space-y-6"
+        >
+          <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full glass border-[var(--primary)]/30 text-xs font-bold tracking-[0.2em] uppercase text-[var(--secondary)] neon-glow-secondary">
+            <Zap className="w-4 h-4 fill-current" />
+            <span>No Partisan Lines. Just Facts.</span>
+          </div>
+          
+          <h1 className="text-[clamp(4rem,15vw,12rem)] font-display leading-[0.8] tracking-[-0.02em] uppercase relative">
+            <span className="block">VOTE</span>
+            <span className="block bg-gradient-to-r from-[var(--primary)] via-[var(--secondary)] to-[var(--accent)] bg-clip-text text-transparent italic">
+              LOUDER
+            </span>
+            {/* Overlapping small text for maximalist feel */}
+            <span className="absolute -bottom-4 right-0 text-lg font-body lowercase tracking-widest text-white/40 hidden md:block">
+              // interactive.election.guide.v1.0
+            </span>
+          </h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-end pt-8">
+            <div className="space-y-6">
+              <p className="text-2xl font-body leading-tight text-[var(--on-surface)]/80 max-w-lg">
+                The high-velocity platform for the next generation of voters. <br/>
+                <span className="text-white font-bold">Cut the noise. See the data.</span>
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <button className="bg-[var(--primary)] text-white px-10 py-5 rounded-2xl font-display text-2xl tracking-wider neon-glow-primary hover:scale-105 transition-transform flex items-center gap-3">
+                  STRIKE BACK
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+                <button className="glass px-10 py-5 rounded-2xl font-display text-2xl tracking-wider text-[var(--secondary)] hover:bg-white/10 transition-colors">
+                  LIVE PULSE
+                </button>
+              </div>
+            </div>
+
+            <div className="glass-card p-8 rotate-1 hidden md:block">
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">Next Milestone</span>
+                <span className="text-[var(--success)] text-xs font-bold">ACTIVE</span>
+              </div>
+              <h3 className="text-4xl font-display mb-2">PRIMARY BALLOT LOCKING</h3>
+              <p className="text-sm text-white/60 mb-6 font-body">Nov 15, 2024 — Prepare your roadmap before the window closes.</p>
+              <div className="h-4 bg-black/40 rounded-full overflow-hidden border border-white/5">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: '84%' }}
+                  transition={{ duration: 1.5, delay: 0.5 }}
+                  className="h-full bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]"
+                />
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
 export default Hero;
+

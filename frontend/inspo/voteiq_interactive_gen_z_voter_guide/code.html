@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VOTEIQ | YOUR VOTE. UNLOCKED.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#15121b",
+                        "inverse-primary": "#732ee4",
+                        "surface-container-lowest": "#100d16",
+                        "secondary-fixed": "#62fae3",
+                        "secondary-fixed-dim": "#3cddc7",
+                        "background": "#15121b",
+                        "outline-variant": "#4a4455",
+                        "tertiary": "#ffb690",
+                        "on-surface-variant": "#ccc3d8",
+                        "surface-tint": "#d2bbff",
+                        "surface-container": "#221e28",
+                        "surface-bright": "#3c3742",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "surface-dim": "#15121b",
+                        "on-error": "#690005",
+                        "error": "#ffb4ab",
+                        "on-background": "#e8dfee",
+                        "on-secondary-fixed-variant": "#005047",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-high": "#2c2833",
+                        "outline": "#958da1",
+                        "on-tertiary": "#552100",
+                        "surface-container-low": "#1d1a24",
+                        "primary-fixed-dim": "#d2bbff",
+                        "on-primary-container": "#ede0ff",
+                        "on-primary-fixed": "#25005a",
+                        "surface-container-highest": "#37333e",
+                        "error-container": "#93000a",
+                        "surface-variant": "#37333e",
+                        "inverse-on-surface": "#332f39",
+                        "on-tertiary-container": "#ffdecf",
+                        "on-secondary-fixed": "#00201c",
+                        "tertiary-fixed": "#ffdbca",
+                        "on-surface": "#e8dfee",
+                        "on-primary": "#3f008e",
+                        "on-secondary": "#003731",
+                        "on-tertiary-fixed-variant": "#783200",
+                        "tertiary-container": "#aa4900",
+                        "primary-fixed": "#eaddff",
+                        "tertiary-fixed-dim": "#ffb690",
+                        "on-secondary-container": "#004d44",
+                        "primary-container": "#7c3aed",
+                        "on-tertiary-fixed": "#341100",
+                        "secondary-container": "#03c6b2",
+                        "primary": "#d2bbff",
+                        "secondary": "#44e2cd",
+                        "inverse-surface": "#e8dfee"
+                    },
+                    fontFamily: {
+                        "body": ["DM Sans", "sans-serif"],
+                        "display": ["Bebas Neue", "cursive"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "8px"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-1deg); }
+            75% { transform: rotate(1deg); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(124, 58, 237, 0.8); }
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBF9qjac7OG5wyd0wA_MKlPCCHIZ7fNQXkLSJ7BkeUDtGHaTMKAiYc2UjeaDCx3Kg0anuoU588Q0_FZLiyoDaBaB8w2Nnm0YSnt2KvuYsD--aJhU3fL8JDtO_7NJLUnxIdDT5H9id9H7prml-HmGNYuBp458GcbsEzGPipAa3KFf8g4Y5AWyLJVx4hmzgRWmvpkFoCXoBUhMZm1x2pw762p7pJpYGUarFhun5-QxYqR0586fBJ-sLRVl_O8xaOpRJ5-B5GwoBmoUXOk);
+            color: #e8dfee;
+            scroll-behavior: smooth;
+        }
+        .glass {
+            background: rgba(21, 18, 27, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 3s infinite; }
+        .wiggle-hover:hover { animation: wiggle 0.2s ease-in-out infinite; }
+        
+        .noise-overlay {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url(https://www.transparenttextures.com/patterns/60-lines.png);
+            opacity: 0.05;
+            z-index: 100;
+        }
+
+        .timeline-card-done {
+            border-color: #44e2cd !important;
+            background: rgba(68, 226, 205, 0.1) !important;
+        }
+        .timeline-card-done .status-badge {
+            background: #44e2cd !important;
+            color: #15121b !important;
+        }
+    </style>
+</head>
+<body class="font-body overflow-x-hidden">
+<div class="noise-overlay"></div>
+<header class="fixed top-0 w-full z-50 bg-neutral-900/60 backdrop-blur-xl border-b border-neutral-800">
+<nav class="flex justify-between items-center px-6 py-4 max-w-full mx-auto">
+<div class="flex items-center gap-8">
+<a class="text-3xl font-black italic text-white drop-shadow-[0_0_10px_rgba(124,58,237,0.8)] font-display uppercase tracking-tighter" href="#">VOTEIQ</a>
+<div class="hidden md:flex gap-6">
+<a class="text-violet-400 border-b-2 border-violet-500 pb-1 px-2 font-bold text-sm uppercase" href="#">Timeline</a>
+<a class="text-white/70 hover:text-white px-2 hover:bg-white/5 transition-all duration-200 font-bold text-sm uppercase" href="#">Candidates</a>
+<a class="text-white/70 hover:text-white px-2 hover:bg-white/5 transition-all duration-200 font-bold text-sm uppercase" href="#">AI Chat</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-white font-bold text-sm uppercase px-4 py-2 hover:bg-white/10 rounded-lg transition-all">Login</button>
+<button class="bg-primary-container text-white font-bold text-sm uppercase px-6 py-2 rounded-lg hover:shadow-[0_0_15px_rgba(124,58,237,0.6)] active:scale-95 transition-all">Register Now</button>
+</div>
+</nav>
+</header>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex flex-col items-center justify-center px-4 overflow-hidden">
+<div class="absolute top-10 flex justify-center w-full">
+<span class="animate-float inline-flex items-center gap-2 px-6 py-2 rounded-full glass border-primary-container text-primary-container font-bold text-sm uppercase">
+<span class="material-symbols-outlined text-sm">event</span>
+                Election Day: Nov 5th, 2024
+            </span>
+</div>
+<div class="text-center z-10 max-w-6xl mx-auto px-4">
+<h1 class="font-display text-[80px] md:text-[120px] leading-[0.9] text-white mb-6 drop-shadow-2xl uppercase italic">
+                YOUR VOTE. <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-container via-secondary to-primary">UNLOCKED.</span>
+</h1>
+<div class="flex flex-col md:flex-row gap-6 justify-center items-center mt-12">
+<button class="animate-pulse-glow w-full md:w-auto bg-primary-container text-white font-display text-3xl px-12 py-6 rounded-xl hover:scale-105 transition-all active:scale-95 flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">location_on</span>
+                    Find Polling Place
+                </button>
+<button class="w-full md:w-auto glass text-secondary font-display text-3xl px-12 py-6 rounded-xl border-secondary hover:bg-secondary/10 transition-all active:scale-95 flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">play_circle</span>
+                    Watch Explainer
+                </button>
+</div>
+<div class="flex flex-wrap justify-center gap-4 mt-16">
+<div class="glass px-6 py-3 rounded-full flex items-center gap-3">
+<span class="text-secondary font-display text-2xl">240M</span>
+<span class="text-white/60 text-[10px] font-bold uppercase tracking-widest">Eligible Voters</span>
+</div>
+<div class="glass px-6 py-3 rounded-full flex items-center gap-3">
+<span class="text-primary font-display text-2xl">52%</span>
+<span class="text-white/60 text-[10px] font-bold uppercase tracking-widest">18-24s Target</span>
+</div>
+<div class="glass px-6 py-3 rounded-full flex items-center gap-3">
+<span class="text-tertiary font-display text-2xl">2 MIN</span>
+<span class="text-white/60 text-[10px] font-bold uppercase tracking-widest">Reg Time</span>
+</div>
+</div>
+</div>
+<div class="absolute -z-10 w-[500px] h-[500px] bg-primary-container/20 blur-[120px] rounded-full top-1/4 -left-20"></div>
+<div class="absolute -z-10 w-[600px] h-[600px] bg-secondary/10 blur-[120px] rounded-full bottom-0 -right-20"></div>
+</section>
+<!-- Timeline Section -->
+<section class="py-24 px-6 max-w-7xl mx-auto">
+<div class="mb-16">
+<h2 class="font-display text-6xl md:text-8xl text-white mb-2">THE MISSION BRIEFING</h2>
+<div class="h-2 w-32 bg-secondary rounded-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative" id="timeline">
+<!-- Background Line -->
+<div class="hidden lg:block absolute top-1/2 left-0 w-full h-[2px] border-t-2 border-dashed border-white/10 -z-10"></div>
+<!-- Card 1 -->
+<div class="cursor-pointer glass p-8 rounded-2xl group border-neutral-800 transition-all relative overflow-hidden h-full flex flex-col" onclick="toggleTimeline(this)">
+<span class="absolute -bottom-4 -right-4 font-display text-[120px] text-white/[0.03] pointer-events-none">01</span>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">how_to_reg</span>
+<span class="status-badge bg-secondary text-surface px-3 py-1 rounded font-bold text-[10px] uppercase transition-colors">Action Required</span>
+</div>
+<h3 class="font-display text-3xl text-white mb-2">REGISTER</h3>
+<p class="text-white/60 text-sm leading-relaxed">Take 2 mins. Do it while your coffee brews. It's the only way in.</p>
+</div>
+<!-- Card 2 -->
+<div class="cursor-pointer glass p-8 rounded-2xl group border-neutral-800 transition-all relative overflow-hidden h-full flex flex-col" onclick="toggleTimeline(this)">
+<span class="absolute -bottom-4 -right-4 font-display text-[120px] text-white/[0.03] pointer-events-none">02</span>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-primary text-4xl">assignment</span>
+<span class="status-badge bg-primary-container text-white px-3 py-1 rounded font-bold text-[10px] uppercase transition-colors">Research</span>
+</div>
+<h3 class="font-display text-3xl text-white mb-2">GET THE BALLOT</h3>
+<p class="text-white/60 text-sm leading-relaxed">See exactly what you're voting for before you even step inside.</p>
+</div>
+<!-- Card 3 -->
+<div class="cursor-pointer glass p-8 rounded-2xl group border-neutral-800 transition-all relative overflow-hidden h-full flex flex-col" onclick="toggleTimeline(this)">
+<span class="absolute -bottom-4 -right-4 font-display text-[120px] text-white/[0.03] pointer-events-none">03</span>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-tertiary text-4xl">calendar_month</span>
+<span class="status-badge bg-tertiary text-surface px-3 py-1 rounded font-bold text-[10px] uppercase transition-colors">Flex</span>
+</div>
+<h3 class="font-display text-3xl text-white mb-2">EARLY VOTE</h3>
+<p class="text-white/60 text-sm leading-relaxed">Skip the long lines. Vote on your own time. No stress needed.</p>
+</div>
+<!-- Card 4 -->
+<div class="cursor-pointer glass p-8 rounded-2xl group border-neutral-800 transition-all relative overflow-hidden h-full flex flex-col" onclick="toggleTimeline(this)">
+<span class="absolute -bottom-4 -right-4 font-display text-[120px] text-white/[0.03] pointer-events-none">04</span>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-error text-4xl">check_circle</span>
+<span class="status-badge bg-error text-on-error px-3 py-1 rounded font-bold text-[10px] uppercase transition-colors">Final</span>
+</div>
+<h3 class="font-display text-3xl text-white mb-2">ELECTION DAY</h3>
+<p class="text-white/60 text-sm leading-relaxed">November 5th. This is the moment. Pull up and make it count.</p>
+</div>
+</div>
+</section>
+<!-- Interactive Bento Grid (Candidates + AI) -->
+<section class="py-24 bg-surface-container/30">
+<div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-start">
+<!-- Candidate Stack Column -->
+<div class="space-y-8">
+<div>
+<h2 class="font-display text-6xl text-white mb-4">MATCH YOUR VIBE.</h2>
+<p class="text-white/70 text-lg max-w-lg">Swipe through candidate profiles tailored to the issues you actually care about. No jargon, just the facts.</p>
+</div>
+<div class="relative h-[550px] flex items-center justify-center" id="candidate-stack-container">
+<!-- Cards Stack -->
+<div class="relative w-full max-w-[340px] h-[480px]" id="stack">
+<!-- Bottom Card -->
+<div class="absolute inset-0 glass rounded-3xl translate-y-8 scale-90 rotate-6 opacity-20 transition-all duration-500"></div>
+<!-- Middle Card -->
+<div class="absolute inset-0 glass rounded-3xl translate-y-4 scale-95 -rotate-3 opacity-60 transition-all duration-500"></div>
+<!-- Top Active Card -->
+<div class="active-card wiggle-hover absolute inset-0 glass rounded-3xl overflow-hidden border-white/20 transition-all duration-300">
+<img class="w-full h-full object-cover grayscale" id="candidate-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPJvLRyP_nCJgr29bFhuetUKwSieS6YpEaM22gp-PW4Su7YrrUuJJB_tUdx6OC6hU2swXEGU9RgvYz9aRYMCoqJgRpU-srnjkoQl0k4qutWpK7u1sETuIq8DbrNbzQI775yg7YcXNYRBy_g-_Gnw2tmFRgdd3gEJXdVhiRCiBdHq2CyYl7T3hz1fagjw1mydFSLpqvat7lvieqjgVgfXYhJzw-GJGbpsZzS7afUbcmQvQcKRekbX4d6q19UvNnox3LoBRn6h6rxG7e"/>
+<div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/60 to-transparent">
+<h4 class="font-display text-4xl text-white" id="candidate-name">DR. MAYA CHEN</h4>
+<p class="font-bold text-secondary text-xs uppercase tracking-widest mb-4" id="candidate-title">State Senate Candidate</p>
+<div class="flex gap-2">
+<span class="bg-white/10 text-white/80 px-2 py-1 rounded text-[10px] uppercase font-bold">Climate</span>
+<span class="bg-white/10 text-white/80 px-2 py-1 rounded text-[10px] uppercase font-bold">Housing</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="absolute -bottom-4 flex gap-6 z-20">
+<button class="w-16 h-16 rounded-full glass border-error flex items-center justify-center group active:scale-90 transition-all hover:bg-error/10" onclick="nextCandidate()">
+<span class="material-symbols-outlined text-error text-3xl group-hover:scale-125 transition-transform">close</span>
+</button>
+<button class="w-16 h-16 rounded-full glass border-secondary-fixed flex items-center justify-center group active:scale-90 transition-all hover:bg-secondary-fixed/10" onclick="nextCandidate()">
+<span class="material-symbols-outlined text-secondary-fixed text-3xl group-hover:scale-125 transition-transform">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- AI Chat Column -->
+<div class="space-y-8 lg:mt-24">
+<div class="text-right">
+<h2 class="font-display text-6xl text-white mb-2">ASK ANYTHING.</h2>
+<p class="text-white/60 font-bold text-xs uppercase tracking-widest">Powered by Gemini &amp; Real-time Election Data</p>
+</div>
+<div class="glass rounded-3xl overflow-hidden border-neutral-800 flex flex-col h-[600px] shadow-2xl">
+<div class="bg-white/5 p-4 flex items-center gap-3 border-b border-white/5">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="font-bold text-[10px] uppercase tracking-widest text-white/60">VoteIQ AI Assistant</span>
+</div>
+<div class="flex-grow p-6 overflow-y-auto space-y-6 flex flex-col scroll-smooth" id="chat-window">
+<div class="self-start max-w-[85%] glass p-4 rounded-2xl rounded-tl-none border-l-2 border-l-secondary">
+<p class="text-sm text-white/90">Yo! Ready to get registered? Ask me anything about IDs, deadlines, or how to vote from your dorm.</p>
+</div>
+<div class="self-end max-w-[85%] bg-primary-container p-4 rounded-2xl rounded-tr-none shadow-lg">
+<p class="text-sm text-white">Can I vote in my college town or do I need to go home?</p>
+</div>
+<div class="self-start max-w-[85%] glass p-4 rounded-2xl rounded-tl-none border-l-2 border-l-secondary">
+<p class="text-sm text-white/90">Great question! You can register at your college address. It's usually easier if you spend most of your time there. Would you like the specific rules for your state?</p>
+</div>
+</div>
+<div class="p-4 bg-white/5 space-y-4">
+<div class="flex gap-2 flex-wrap">
+<button class="glass px-3 py-1.5 rounded-full text-[10px] font-bold uppercase hover:bg-secondary/20 transition-all border-secondary/30" onclick="sendMock('What ID do I need?')">ID Requirements?</button>
+<button class="glass px-3 py-1.5 rounded-full text-[10px] font-bold uppercase hover:bg-secondary/20 transition-all border-secondary/30" onclick="sendMock('Deadline in NY?')">Deadlines</button>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border-neutral-800 rounded-xl py-3 pl-5 pr-12 text-sm text-white focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" id="chat-input" placeholder="Ask about your state's rules..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-secondary text-surface rounded-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all" onclick="sendMessage()">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="w-full border-t border-white/5 bg-neutral-950 relative overflow-hidden">
+<div class="text-[180px] font-display text-white/[0.02] absolute -left-10 -bottom-10 select-none pointer-events-none italic">VOTEIQ</div>
+<div class="max-w-7xl mx-auto px-6 py-24 relative z-10">
+<div class="text-center mb-24">
+<h2 class="font-display text-7xl md:text-9xl text-white mb-10 leading-[0.85] uppercase">DON'T LET SOMEONE ELSE <br/> DECIDE YOUR FUTURE.</h2>
+<button class="bg-secondary text-surface font-display text-4xl px-16 py-8 rounded-2xl hover:scale-105 hover:-translate-y-2 transition-all duration-500 animate-pulse-glow shadow-[0_0_50px_rgba(68,226,205,0.3)] uppercase">START THE MISSION</button>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-white/5">
+<div class="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-500">
+                © 2024 VOTEIQ. CHAOTIC GOOD CIVICS.
+            </div>
+<div class="flex gap-8">
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 hover:text-secondary transition-all" href="#">Privacy</a>
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 hover:text-secondary transition-all" href="#">Terms</a>
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 hover:text-secondary transition-all" href="#">Volunteer</a>
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 hover:text-secondary transition-all" href="#">Donate</a>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:text-secondary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">share</span>
+</div>
+<div class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:text-secondary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">public</span>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+    // Timeline Toggle Logic
+    function toggleTimeline(element) {
+        element.classList.toggle('timeline-card-done');
+        const badge = element.querySelector('.status-badge');
+        if (element.classList.contains('timeline-card-done')) {
+            badge.innerText = 'Done';
+            element.querySelector('.material-symbols-outlined').style.color = '#15121b';
+        } else {
+            // Restore original text based on index if needed, for simplicity just setting back to default
+            badge.innerText = 'Action Required';
+            element.querySelector('.material-symbols-outlined').style.color = '';
+        }
+    }
+
+    // Candidate Stack Logic
+    const candidates = [
+        { name: "DR. MAYA CHEN", title: "State Senate Candidate", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAPJvLRyP_nCJgr29bFhuetUKwSieS6YpEaM22gp-PW4Su7YrrUuJJB_tUdx6OC6hU2swXEGU9RgvYz9aRYMCoqJgRpU-srnjkoQl0k4qutWpK7u1sETuIq8DbrNbzQI775yg7YcXNYRBy_g-_Gnw2tmFRgdd3gEJXdVhiRCiBdHq2CyYl7T3hz1fagjw1mydFSLpqvat7lvieqjgVgfXYhJzw-GJGbpsZzS7afUbcmQvQcKRekbX4d6q19UvNnox3LoBRn6h6rxG7e" },
+        { name: "MARCUS RIVERA", title: "City Council", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1000" },
+        { name: "SARAH JENKINS", title: "District Attorney", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1000" }
+    ];
+    let currentIdx = 0;
+
+    function nextCandidate() {
+        const stack = document.getElementById('stack');
+        stack.style.transform = 'translateX(200px) rotate(20deg)';
+        stack.style.opacity = '0';
+        
+        setTimeout(() => {
+            currentIdx = (currentIdx + 1) % candidates.length;
+            document.getElementById('candidate-name').innerText = candidates[currentIdx].name;
+            document.getElementById('candidate-title').innerText = candidates[currentIdx].title;
+            document.getElementById('candidate-img').src = candidates[currentIdx].img;
+            
+            stack.style.transform = 'translateX(0) rotate(0)';
+            stack.style.opacity = '1';
+        }, 300);
+    }
+
+    // Chat Logic
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        addMessage(text, 'user');
+        input.value = '';
+
+        setTimeout(() => {
+            const replies = [
+                "I've got the data on that. Based on your location, you've got until Oct 26th to register online.",
+                "Yo! That's a common one. You can definitely use your student ID if it has a photo and signature.",
+                "Check the map—your closest polling place is the Student Union, Room 302."
+            ];
+            addMessage(replies[Math.floor(Math.random() * replies.length)], 'ai');
+        }, 1000);
+    }
+
+    function sendMock(text) {
+        document.getElementById('chat-input').value = text;
+        sendMessage();
+    }
+
+    function addMessage(text, sender) {
+        const win = document.getElementById('chat-window');
+        const msg = document.createElement('div');
+        if (sender === 'user') {
+            msg.className = 'self-end max-w-[85%] bg-primary-container p-4 rounded-2xl rounded-tr-none shadow-lg animate-in fade-in slide-in-from-right-4 duration-300';
+            msg.innerHTML = `<p class="text-sm text-white">${text}</p>`;
+        } else {
+            msg.className = 'self-start max-w-[85%] glass p-4 rounded-2xl rounded-tl-none border-l-2 border-l-secondary animate-in fade-in slide-in-from-left-4 duration-300';
+            msg.innerHTML = `<p class="text-sm text-white/90">${text}</p>`;
+        }
+        win.appendChild(msg);
+        win.scrollTop = win.scrollHeight;
+    }
+</script>
+</body></html>
