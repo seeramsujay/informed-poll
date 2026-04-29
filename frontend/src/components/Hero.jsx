@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 
 const Hero = () => {
   return (
@@ -42,14 +44,15 @@ const Hero = () => {
               </p>
               
               <div className="flex flex-wrap gap-4">
-                <button className="bg-[var(--primary)] text-white px-10 py-5 rounded-2xl font-display text-2xl tracking-wider neon-glow-primary hover:scale-105 transition-transform flex items-center gap-3">
+                <Link to="/candidates" className="bg-[var(--primary)] text-white px-10 py-5 rounded-2xl font-display text-2xl tracking-wider neon-glow-primary hover:scale-105 transition-transform flex items-center gap-3">
                   STRIKE BACK
                   <ChevronRight className="w-6 h-6" />
-                </button>
-                <button className="glass px-10 py-5 rounded-2xl font-display text-2xl tracking-wider text-[var(--secondary)] hover:bg-white/10 transition-colors">
+                </Link>
+                <Link to="/neuralsync" className="glass px-10 py-5 rounded-2xl font-display text-2xl tracking-wider text-[var(--secondary)] hover:bg-white/10 transition-colors">
                   LIVE PULSE
-                </button>
+                </Link>
               </div>
+
             </div>
 
             <div className="glass-card p-8 rotate-1 hidden md:block">

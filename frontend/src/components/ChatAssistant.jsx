@@ -1,114 +1,167 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Sparkles } from 'lucide-react';
+import { Send, Loader2, Sparkles, Zap, RotateCcw, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const initialMessages = [
-  { id: 1, text: "Yo! Ready to get registered? Ask me anything about IDs, deadlines, or how to vote from your dorm.", sender: 'ai' }
+const QUICK_PROMPTS = [
+  "What ID do I need to vote?",
+  "How do I register in California?",
+  "Can college students vote at school?",
+  "What is a provisional ballot?",
+  "How long are polling places open?",
+  "Can I track my mail-in ballot?",
 ];
 
-const mockReplies = [
-  "I've got the data on that. Based on your location, you've got until Oct 26th to register online.",
-  "Yo! That's a common one. You can definitely use your student ID if it has a photo and signature.",
-  "Check the map—your closest polling place is the Student Union, Room 302."
-];
+const TypingIndicator = () => (
+  <div className="flex justify-start">
+    <div className="glass border-l-2 border-l-[var(--secondary)] p-4 rounded-2xl rounded-tl-none flex gap-2 items-center">
+      {[0, 1, 2].map(i => (
+        <motion.div
+          key={i}
+          className="w-1.5 h-1.5 rounded-full bg-[var(--secondary)]"
+          animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 0.8, delay: i * 0.15, repeat: Infinity }}
+        />
+      ))}
+    </div>
+  </div>
+);
+
+const MessageBubble = ({ msg }) => {
+  const [copied, setCopied] = useState(false);
+  const isAi = msg.sender === 'ai';
+
+  const copy = async () => {
+    await navigator.clipboard.writeText(msg.text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10, x: isAi ? -10 : 10 }}
+      animate={{ opacity: 1, y: 0, x: 0 }}
+      transition={{ duration: 0.25 }}
+      className={`flex ${isAi ? 'justify-start' : 'justify-end'} group`}
+    >
+      <div className={`relative max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
+        isAi
+          ? 'glass border-l-2 border-l-[var(--secondary)] text-[var(--on-surface)] rounded-tl-none'
+          : 'bg-[var(--primary)] text-white rounded-tr-none shadow-lg'
+      }`}>
+        {msg.text}
+        {isAi && (
+          <button
+            onClick={copy}
+            className="absolute -top-3 -right-3 glass p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            {copied ? <Check className="w-3 h-3 text-[var(--secondary)]" /> : <Copy className="w-3 h-3 text-white/40" />}
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
+};
 
 const ChatAssistant = () => {
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState([
+    { id: 1, text: "Yo! I'm VoteIQ — your non-partisan AI guide to the ballot. Ask me anything: registration deadlines, ID rules, polling places, candidate platforms.", sender: 'ai' }
+  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isLoading]);
 
-  const handleSend = (text) => {
-    const messageText = typeof text === 'string' ? text : input;
-    if (!messageText.trim() || isLoading) return;
+  const handleSend = async (text) => {
+    const msg = typeof text === 'string' ? text : input;
+    if (!msg.trim() || isLoading) return;
 
-    const userMsg = { id: Date.now(), text: messageText, sender: 'user' };
-    setMessages(prev => [...prev, userMsg]);
+    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'user' }]);
     setInput('');
     setIsLoading(true);
 
-    setTimeout(() => {
-      const aiMsg = { 
-        id: Date.now() + 1, 
-        text: mockReplies[Math.floor(Math.random() * mockReplies.length)], 
-        sender: 'ai' 
-      };
-      setMessages(prev => [...prev, aiMsg]);
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg }),
+      });
+      const data = await res.json();
+      setMessages(prev => [...prev, { id: Date.now() + 1, text: data.reply || 'No response.', sender: 'ai' }]);
+    } catch {
+      setMessages(prev => [...prev, { id: Date.now() + 1, text: 'Connection error — backend may be offline.', sender: 'ai' }]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
+  };
+
+  const reset = () => {
+    setMessages([{ id: 1, text: "Fresh session. What do you want to know?", sender: 'ai' }]);
   };
 
   return (
-    <div className="glass-card flex flex-col h-[600px] border-none shadow-2xl">
-      <div className="p-4 flex items-center gap-3 bg-white/5 border-b border-white/5">
-        <div className="w-2 h-2 rounded-full bg-[var(--secondary)] animate-pulse"></div>
-        <span className="font-bold text-[10px] uppercase tracking-widest text-white/60">VoteIQ AI Assistant</span>
+    <div className="glass-card flex flex-col h-[620px] border-none shadow-2xl">
+      {/* Header */}
+      <div className="p-4 flex items-center gap-3 bg-white/5 border-b border-white/5 flex-shrink-0">
+        <motion.div
+          className="w-2 h-2 rounded-full bg-[var(--secondary)]"
+          animate={{ opacity: [1, 0.3, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        />
+        <span className="font-bold text-[10px] uppercase tracking-widest text-white/60 flex-1">VoteIQ Neural Sync · AI Active</span>
+        <button onClick={reset} className="text-white/30 hover:text-white/70 transition-colors">
+          <RotateCcw className="w-3.5 h-3.5" />
+        </button>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
-        <AnimatePresence>
-          {messages.map((msg) => (
-            <motion.div 
-              key={msg.id} 
-              initial={{ opacity: 0, x: msg.sender === 'user' ? 20 : -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
-                msg.sender === 'user' 
-                  ? 'bg-[var(--primary)] text-white rounded-tr-none shadow-lg' 
-                  : 'glass border-l-2 border-l-[var(--secondary)] text-[var(--on-surface)] rounded-tl-none'
-              }`}>
-                {msg.text}
-              </div>
-            </motion.div>
-          ))}
+      {/* Messages */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-hide">
+        <AnimatePresence initial={false}>
+          {messages.map(msg => <MessageBubble key={msg.id} msg={msg} />)}
         </AnimatePresence>
-        
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="glass p-4 rounded-2xl rounded-tl-none border-l-2 border-l-[var(--secondary)] flex gap-3 items-center">
-              <Loader2 className="w-4 h-4 animate-spin text-[var(--secondary)]" />
-              <span className="text-sm text-white/60">Thinking...</span>
-            </div>
-          </div>
-        )}
+        {isLoading && <TypingIndicator />}
       </div>
 
-      <div className="p-4 bg-white/5 space-y-4">
-        <div className="flex gap-2 flex-wrap">
-          <button 
-            onClick={() => handleSend('What ID do I need?')}
-            className="glass px-3 py-1.5 rounded-full text-[10px] font-bold uppercase hover:bg-[var(--secondary)]/20 transition-all border-[var(--secondary)]/30"
+      {/* Quick prompts */}
+      <div className="px-4 pb-2 flex gap-2 flex-wrap flex-shrink-0">
+        {QUICK_PROMPTS.slice(0, 3).map(p => (
+          <button
+            key={p}
+            onClick={() => handleSend(p)}
+            disabled={isLoading}
+            className="glass px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-[var(--secondary)]/20 transition-all border-[var(--secondary)]/20 disabled:opacity-40 whitespace-nowrap"
           >
-            ID Requirements?
+            {p}
           </button>
-          <button 
-            onClick={() => handleSend('Deadline in NY?')}
-            className="glass px-3 py-1.5 rounded-full text-[10px] font-bold uppercase hover:bg-[var(--secondary)]/20 transition-all border-[var(--secondary)]/30"
-          >
-            Deadlines
-          </button>
-        </div>
-        <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="relative group">
-          <input 
+        ))}
+      </div>
+
+      {/* Input */}
+      <div className="p-4 bg-white/5 border-t border-white/5 flex-shrink-0">
+        <form
+          onSubmit={e => { e.preventDefault(); handleSend(); }}
+          className="relative flex gap-2"
+        >
+          <input
+            ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about your state's rules..."
-            className="w-full bg-[#100d16] border border-neutral-800 rounded-xl py-3 pl-5 pr-12 text-sm text-white focus:ring-1 focus:ring-[var(--secondary)] focus:border-[var(--secondary)] transition-all outline-none"
+            onChange={e => setInput(e.target.value)}
+            placeholder="Ask about voting rules, deadlines, IDs..."
+            disabled={isLoading}
+            className="flex-1 bg-[#100d16] border border-neutral-800 rounded-xl py-3 pl-4 pr-4 text-sm text-white focus:ring-1 focus:ring-[var(--secondary)] focus:border-[var(--secondary)] transition-all outline-none disabled:opacity-50"
           />
-          <button 
+          <button
             type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[var(--secondary)] text-[var(--surface)] rounded-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+            disabled={isLoading || !input.trim()}
+            className="w-10 h-10 bg-[var(--secondary)] text-[var(--surface)] rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 flex-shrink-0 self-center"
           >
-            <Send className="w-4 h-4" />
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           </button>
         </form>
       </div>
@@ -117,4 +170,3 @@ const ChatAssistant = () => {
 };
 
 export default ChatAssistant;
-

@@ -4,6 +4,7 @@
 - [ ] Implement robust error handling for LanceDB connection loss.
 - [ ] Setup unit tests using `pytest` and `httpx`.
 - [ ] Add logging configuration for Cloud Run (Cloud Logging integration).
+- [ ] Resolve Firestore ADC initialization error in local environment.
 
 ## Feature Backlog
 - [ ] **Multi-modal Polls**: Support for images/video context via Gemini.

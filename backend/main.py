@@ -11,18 +11,26 @@ import pandas as pd
 app = FastAPI(title="Informed Poll API")
 
 # Initialize Firebase
-# Note: For Cloud Run, service account is usually inferred from the environment
 if not firebase_admin._apps:
     try:
         firebase_admin.initialize_app()
     except Exception as e:
         print(f"Firebase initialization error: {e}")
 
-db = firestore.client()
+db = None
+try:
+    db = firestore.client()
+except Exception as e:
+    print(f"Firestore initialization error: {e}")
 
 # Initialize LanceDB
 LANCE_DB_PATH = os.getenv("LANCE_DB_PATH", "./lancedb/poll_context")
-lancedb_conn = lancedb.connect(LANCE_DB_PATH)
+lancedb_conn = None
+try:
+    lancedb_conn = lancedb.connect(LANCE_DB_PATH)
+except Exception as e:
+    print(f"LanceDB initialization error: {e}")
+
 
 # Models
 class Poll(BaseModel):
@@ -78,6 +86,34 @@ async def submit_vote(vote: Vote):
         return {"status": "success", "user": uid}
     except Exception as e:
         raise HTTPException(status_code=401, detail=str(e))
+
+class ChatRequest(BaseModel):
+    message: str
+
+@app.post("/api/chat")
+async def chat_with_gemini(request: ChatRequest):
+    try:
+        import os
+        api_key = os.environ.get("GEMINI_API_KEY")
+        
+        system_instruction = "You are VoteIQ, a helpful AI assistant for young voters. Provide concise, clear, and non-partisan information about elections, voting requirements, and candidate platforms."
+        
+        if api_key:
+            import google.generativeai as genai
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel(
+                model_name="gemini-1.5-flash",
+                system_instruction=system_instruction
+            )
+            response = model.generate_content(request.message)
+            return {"reply": response.text}
+        else:
+            print("Warning: GEMINI_API_KEY not found. Using mock response.")
+            return {"reply": "Neural Sync Offline: Please set GEMINI_API_KEY in your environment to connect to the collective."}
+            
+    except Exception as e:
+        print(f"Error calling Gemini: {e}")
+        return {"reply": "Sorry, connection unstable. Please try again later."}
 
 if __name__ == "__main__":
     import uvicorn

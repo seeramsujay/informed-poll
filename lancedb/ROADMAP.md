@@ -26,8 +26,9 @@ Interactive election guide with swippable candidate cards, real-time timelines, 
 - [x] Dockerfile and requirements for backend prepared.
 
 ### Phase 1: Local Experience & Refinement [ACTIVE]
-- [ ] Implement full candidate swipe logic in `CandidateStack`.
-- [ ] Connect `ChatAssistant` to local mock responses.
+- [x] Verified local full-stack execution (Vite + FastAPI).
+- [/] Implement full candidate swipe logic in `CandidateStack`.
+- [/] Connect `ChatAssistant` to local mock responses.
 - [ ] Build `RegistrationStepper` component.
 
 ### Phase 2: Google Services Integration
