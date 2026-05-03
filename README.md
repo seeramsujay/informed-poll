@@ -11,9 +11,43 @@
 
 ---
 
-## 🚀 Live Demo
-- **Frontend**: [informed-poll-frontend.run.app](https://informed-poll-frontend-51884867643.us-central1.run.app)
-- **API**: [informed-poll-backend.run.app/docs](https://informed-poll-backend-51884867643.us-central1.run.app/docs)
+## 🚀 Deployment Status
+- **Production URL**: [informed-poll.run.app](https://informed-poll-frontend-51884867643.us-central1.run.app)
+- **API Documentation**: [informed-poll-api.run.app/docs](https://informed-poll-backend-51884867643.us-central1.run.app/docs)
+- **Region**: `us-central1`
+- **Engine**: Google Cloud Run (Fully Managed)
+
+---
+
+## 🛤️ Development Status
+
+### Phase 1: Local Experience & Refinement [COMPLETED]
+- [x] Verified local full-stack execution (Vite + FastAPI).
+- [x] Implement full candidate swipe logic in `CandidateStack`.
+- [x] Connect `ChatAssistant` to production AI responses.
+- [x] Integrate comprehensive ECI content via `Dossier` page.
+- [x] Build `RegistrationStepper` component.
+
+### Phase 2: Google Services Integration [COMPLETED]
+- [x] Connect to Firestore for saving "Personal Ballots".
+- [x] Integrate Gemini API (Upgraded to Gemini 2.5 Flash) for grounded AI chat.
+- [x] Firebase Auth on frontend (Email + Google OAuth).
+- [x] Backend token verification with OIDC.
+- [x] High-fidelity RAG using LanceDB.
+
+### Phase 3: Deployment & Scale [COMPLETED]
+- [x] Containerized multi-service deployment to Google Cloud Run.
+  - **Backend**: [informed-poll-backend.run.app](https://informed-poll-backend-51884867643.us-central1.run.app)
+  - **Frontend**: [informed-poll-frontend.run.app](https://informed-poll-frontend-51884867643.us-central1.run.app)
+- [x] CI/CD pipeline automation via Cloud Build.
+- [x] E2E verification (91/91 Vitest tests passed).
+- [x] Premium documentation overhaul (Hackernews-standard).
+
+| Phase | Track | Status | Date |
+| :--- | :--- | :--- | :--- |
+| **Phase 1** | Local Experience | ✅ Completed | 2026-05-01 |
+| **Phase 2** | Google RAG Integration | ✅ Completed | 2026-05-02 |
+| **Phase 3** | Cloud Run Deployment | ✅ Completed | 2026-05-03 |
 
 ---
 

@@ -12,5 +12,5 @@
   - Summary: Built initial Vite frontend and FastAPI backend with mock data.
 - [x] **[phase-3-deployment]**: Cloud Run Deployment
   - Status: Completed
-  - Completed: 2026-05-02
-  - Summary: Deployed backend (FastAPI) and frontend (Vite/Nginx) to Google Cloud Run. Integrated build-time environment variables.
+  - Completed: 2026-05-03
+  - Summary: Redeployed backend (FastAPI) and frontend (Vite/Nginx) to Google Cloud Run with Gemini 2.5 Flash and updated docs.

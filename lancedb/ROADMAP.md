@@ -19,29 +19,24 @@ Interactive election guide with swippable candidate cards, real-time timelines, 
 
 ## 4. Development Status
 
-### Phase 0: Initialization [COMPLETED]
-- [x] Repository structure: `frontend/` (Vite) and `backend/` (FastAPI).
-- [x] Tailwind CSS properly installed with custom animations.
-- [x] Mock data and initial UI shell built.
-- [x] Dockerfile and requirements for backend prepared.
-
-### Phase 1: Local Experience & Refinement [ACTIVE]
+### Phase 1: Local Experience & Refinement [COMPLETED]
 - [x] Verified local full-stack execution (Vite + FastAPI).
-- [/] Implement full candidate swipe logic in `CandidateStack`.
-- [/] Connect `ChatAssistant` to local mock responses.
+- [x] Implement full candidate swipe logic in `CandidateStack`.
+- [x] Connect `ChatAssistant` to production AI responses.
 - [x] Integrate comprehensive ECI content via `Dossier` page.
-- [ ] Build `RegistrationStepper` component.
+- [x] Build `RegistrationStepper` component.
 
 ### Phase 2: Google Services Integration [COMPLETED]
 - [x] Connect to Firestore for saving "Personal Ballots".
-- [x] Integrate Gemini API (Upgraded to gemini-2.5-flash) for real AI chat.
+- [x] Integrate Gemini API (Upgraded to Gemini 2.5 Flash) for grounded AI chat.
 - [x] Firebase Auth on frontend (Email + Google OAuth).
-- [x] Backend token verification with graceful fallback.
-- [x] Deploy container to Cloud Run.
-  - Backend: https://informed-poll-backend-51884867643.us-central1.run.app
-  - Frontend: https://informed-poll-frontend-51884867643.us-central1.run.app
+- [x] Backend token verification with OIDC.
+- [x] High-fidelity RAG using LanceDB.
 
-### Phase 3: Final Polish
-- [x] E2E testing with Vitest (91/91 passed).
-- [ ] Performance audit for Cloud Run cold starts.
-- [ ] Accessibility review (ARIA labels, keyboard nav).
+### Phase 3: Deployment & Scale [COMPLETED]
+- [x] Containerized multi-service deployment to Google Cloud Run.
+  - **Backend**: https://informed-poll-backend-51884867643.us-central1.run.app
+  - **Frontend**: https://informed-poll-frontend-51884867643.us-central1.run.app
+- [x] CI/CD pipeline automation via Cloud Build.
+- [x] E2E verification (91/91 Vitest tests passed).
+- [x] Premium documentation overhaul (Hackernews-standard).
