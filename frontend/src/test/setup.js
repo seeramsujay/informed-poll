@@ -20,6 +20,10 @@ vi.mock('framer-motion', () => {
     motion,
     AnimatePresence: ({ children }) => children,
     useAnimation: () => ({ start: vi.fn() }),
+    useScroll: () => ({ scrollYProgress: { get: () => 0, set: vi.fn(), on: vi.fn(), destroy: vi.fn() } }),
+    useSpring: (v) => v ?? { get: () => 0 },
+    useInView: () => true,
+    useMotionValue: (initial) => ({ get: () => initial, set: vi.fn(), on: vi.fn() }),
   };
 });
 

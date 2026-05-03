@@ -17,7 +17,8 @@ import {
   Info,
   Hash,
   Scale,
-  ExternalLink
+  ExternalLink,
+  Zap
 } from 'lucide-react';
 
 const TableOfContents = ({ activeSection }) => {
@@ -229,7 +230,7 @@ const Dossier = () => {
                   <div className="space-y-4 text-sm">
                     <div className="flex gap-4">
                       <span className="text-[var(--primary)] font-bold">01</span>
-                      <p><strong>Account Creation:</strong> Navigat to NVSP or download the Voter Helpline App. Verify via OTP.</p>
+                      <p><strong>Account Creation:</strong> Navigate to NVSP or download the Voter Helpline App. Verify via OTP.</p>
                     </div>
                     <div className="flex gap-4">
                       <span className="text-[var(--primary)] font-bold">02</span>
@@ -442,11 +443,11 @@ const Dossier = () => {
 
               <div className="pt-24 border-t border-white/5 text-center space-y-6">
                 <div className="flex justify-center gap-4">
-                  <a href="https://voters.eci.gov.in" target="_blank" className="text-xs font-bold uppercase tracking-widest text-[var(--primary)] flex items-center gap-2 hover:underline">
-                    Visit ECI Portal <ExternalLink className="w-3 h-3" />
+                  <a href="https://voters.eci.gov.in" target="_blank" rel="noopener noreferrer" className="text-xs font-bold uppercase tracking-widest text-[var(--primary)] flex items-center gap-2 hover:underline">
+                    Visit ECI Portal <ExternalLink className="w-3 h-3" aria-hidden="true" />
                   </a>
-                  <a href="https://www.eci.gov.in/eBooks" target="_blank" className="text-xs font-bold uppercase tracking-widest text-[var(--primary)] flex items-center gap-2 hover:underline">
-                    Download Handbooks <ExternalLink className="w-3 h-3" />
+                  <a href="https://www.eci.gov.in/eBooks" target="_blank" rel="noopener noreferrer" className="text-xs font-bold uppercase tracking-widest text-[var(--primary)] flex items-center gap-2 hover:underline">
+                    Download Handbooks <ExternalLink className="w-3 h-3" aria-hidden="true" />
                   </a>
                 </div>
                 <p className="text-[10px] text-white/20 uppercase tracking-[0.2em]">
@@ -460,21 +461,5 @@ const Dossier = () => {
     </div>
   );
 };
-
-// Internal components to keep it clean
-const Zap = ({ className, style }) => (
-  <svg 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-    style={style}
-  >
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-  </svg>
-);
 
 export default Dossier;

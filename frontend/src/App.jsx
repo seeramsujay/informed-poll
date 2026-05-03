@@ -25,7 +25,7 @@ function App() {
 
       <Navbar />
 
-      <div className="flex-1">
+      <div id="main-content" className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/candidates" element={<Candidates />} />

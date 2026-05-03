@@ -2,15 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VoteIQ | Informed Polling</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <!-- Primary Meta Tags -->
+    <title>VoteIQ | Informed Poll — AI-Powered Civic Intelligence for Young Voters</title>
+    <meta name="title" content="VoteIQ | Informed Poll — AI-Powered Civic Intelligence for Young Voters" />
+    <meta name="description" content="VoteIQ is a non-partisan AI civic guide for first-time voters. Swipe through candidates, learn your rights, and chat with Gemini-powered AI about elections, registration, and voting protocols." />
+    <meta name="keywords" content="voting, elections, civic education, AI, young voters, India, electoral process, candidate comparison, voter registration" />
+    <meta name="author" content="Informed Poll" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="VoteIQ | Informed Poll — AI-Powered Civic Intelligence" />
+    <meta property="og:description" content="Your non-partisan AI guide to elections. Swipe candidates, learn your rights, chat with Gemini." />
+    <meta property="og:image" content="/public/og-image.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="VoteIQ | Informed Poll" />
+    <meta name="twitter:description" content="Your non-partisan AI guide to elections. Powered by Gemini 2.5 Flash." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://firebaseapp.com" crossorigin />
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#6e00ff" />
   </head>
   <body>
+    <!-- Skip to main content for keyboard/screen reader users -->
+    <a
+      href="#main-content"
+      class="skip-link"
+      style="position:absolute;top:-40px;left:0;padding:8px 16px;background:#6e00ff;color:white;font-weight:bold;z-index:9999;transition:top 0.2s;"
+      onfocus="this.style.top='0'"
+      onblur="this.style.top='-40px'"
+    >
+      Skip to main content
+    </a>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -45,8 +45,9 @@ const CandidateCard = ({ candidate, onSwipe }) => {
       <div className="relative h-full">
         <img
           src={candidate.image}
-          alt={candidate.name}
+          alt={`${candidate.name} - ${candidate.role}, ${candidate.party}`}
           className="w-full h-full object-cover"
+          loading="lazy"
           draggable={false}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
@@ -113,19 +114,21 @@ const CandidateCard = ({ candidate, onSwipe }) => {
         </AnimatePresence>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-1">
+        <div className="flex gap-3 pt-1" role="group" aria-label="Candidate actions">
           <button
             onClick={(e) => { e.stopPropagation(); onSwipe('left'); }}
+            aria-label={`Skip ${candidate.name}`}
             className="flex-1 glass py-3.5 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-400/10 transition-colors border-none shadow-[inset_0_0_0_1px_rgba(248,113,113,0.1)]"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onSwipe('right'); }}
+            aria-label={`Endorse ${candidate.name}`}
             className="flex-1 py-3.5 rounded-xl flex items-center justify-center text-white transition-colors"
             style={{ background: candidate.color, boxShadow: `0 0 20px ${candidate.color}66` }}
           >
-            <Heart className="w-5 h-5 fill-current" />
+            <Heart className="w-5 h-5 fill-current" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -234,7 +237,10 @@ const CandidateStack = () => {
   return (
     <div className="space-y-4">
       {/* Progress */}
-      <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-white/30">
+      <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-white/30"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <span>{candidates.indexOf(current) + 1} / {candidates.length}</span>
         <span>{ballot.length} endorsed</span>
       </div>

@@ -43,6 +43,7 @@ const MessageBubble = ({ msg }) => {
       animate={{ opacity: 1, y: 0, x: 0 }}
       transition={{ duration: 0.25 }}
       className={`flex ${isAi ? 'justify-start' : 'justify-end'} group`}
+      role="listitem"
     >
       <div className={`relative max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
         isAi
@@ -53,6 +54,7 @@ const MessageBubble = ({ msg }) => {
         {isAi && (
           <button
             onClick={copy}
+            aria-label={copied ? 'Copied to clipboard' : 'Copy message'}
             className="absolute -top-3 -right-3 glass p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
           >
             {copied ? <Check className="w-3 h-3 text-[var(--secondary)]" /> : <Copy className="w-3 h-3 text-white/40" />}
@@ -130,13 +132,19 @@ const ChatAssistant = () => {
           transition={{ duration: 1.5, repeat: Infinity }}
         />
         <span className="font-bold text-[10px] uppercase tracking-widest text-white/60 flex-1">VoteIQ Neural Sync · AI Active</span>
-        <button onClick={reset} className="text-white/30 hover:text-white/70 transition-colors">
-          <RotateCcw className="w-3.5 h-3.5" />
+        <button onClick={reset} aria-label="Reset conversation" className="text-white/30 hover:text-white/70 transition-colors">
+          <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
         </button>
       </div>
 
       {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-hide">
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-hide"
+        aria-live="polite"
+        aria-label="Chat messages"
+        role="list"
+      >
         <AnimatePresence initial={false}>
           {messages.map(msg => <MessageBubble key={msg.id} msg={msg} />)}
         </AnimatePresence>
@@ -175,9 +183,10 @@ const ChatAssistant = () => {
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
+            aria-label={isLoading ? 'Sending message...' : 'Send message'}
             className="w-10 h-10 bg-[var(--secondary)] text-[var(--surface)] rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 flex-shrink-0 self-center"
           >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> : <Send className="w-4 h-4" aria-hidden="true" />}
           </button>
         </form>
       </div>

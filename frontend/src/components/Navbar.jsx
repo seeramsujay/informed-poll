@@ -42,6 +42,9 @@ const IdentityModal = ({ onClose }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="identity-modal-title"
     >
       {/* Backdrop */}
       <motion.div
@@ -62,9 +65,10 @@ const IdentityModal = ({ onClose }) => {
         {/* Close */}
         <button
           onClick={onClose}
+          aria-label="Close identity modal"
           className="absolute top-4 right-4 text-white/30 hover:text-white transition-colors"
         >
-          <X className="w-5 h-5" />
+          <X className="w-5 h-5" aria-hidden="true" />
         </button>
 
         {/* Header */}
@@ -72,7 +76,7 @@ const IdentityModal = ({ onClose }) => {
           <div className="w-12 h-12 rounded-2xl bg-[var(--primary)]/20 border border-[var(--primary)]/30 flex items-center justify-center mx-auto">
             <Zap className="w-6 h-6 text-[var(--primary)]" />
           </div>
-          <h2 className="font-display text-4xl uppercase italic">Connect Identity</h2>
+          <h2 id="identity-modal-title" className="font-display text-4xl uppercase italic">Connect Identity</h2>
           <p className="text-white/40 text-xs">Access your personal ballot and voting timeline</p>
         </div>
 
@@ -102,14 +106,16 @@ const IdentityModal = ({ onClose }) => {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-1.5">Full Name</label>
+                <label htmlFor="identity-name" className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-1.5">Full Name</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" aria-hidden="true" />
                   <input
+                    id="identity-name"
                     type="text"
                     placeholder="Your name"
                     value={form.name}
                     onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                    autoComplete="name"
                     className="w-full bg-[#100d16] border border-neutral-800 rounded-xl py-3 pl-9 pr-4 text-sm text-white focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] outline-none transition-all"
                   />
                 </div>
@@ -118,38 +124,43 @@ const IdentityModal = ({ onClose }) => {
           </AnimatePresence>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-1.5">Email</label>
+            <label htmlFor="identity-email" className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-1.5">Email</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" aria-hidden="true" />
               <input
+                id="identity-email"
                 type="email"
                 placeholder="you@example.com"
                 value={form.email}
                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                 required
+                autoComplete="email"
                 className="w-full bg-[#100d16] border border-neutral-800 rounded-xl py-3 pl-9 pr-4 text-sm text-white focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] outline-none transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-1.5">Password</label>
+            <label htmlFor="identity-password" className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-1.5">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" aria-hidden="true" />
               <input
+                id="identity-password"
                 type={showPass ? 'text' : 'password'}
                 placeholder="••••••••"
                 value={form.password}
                 onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                 required
+                autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
                 className="w-full bg-[#100d16] border border-neutral-800 rounded-xl py-3 pl-9 pr-10 text-sm text-white focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] outline-none transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPass(v => !v)}
+                aria-label={showPass ? 'Hide password' : 'Show password'}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors"
               >
-                {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPass ? <EyeOff className="w-4 h-4" aria-hidden="true" /> : <Eye className="w-4 h-4" aria-hidden="true" />}
               </button>
             </div>
           </div>
@@ -271,8 +282,11 @@ const Navbar = () => {
           <button
             className="lg:hidden p-2 text-white"
             onClick={() => setMenuOpen(v => !v)}
+            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
           >
-            {menuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+            {menuOpen ? <X className="w-8 h-8" aria-hidden="true" /> : <Menu className="w-8 h-8" aria-hidden="true" />}
           </button>
         </div>
 
@@ -280,6 +294,7 @@ const Navbar = () => {
         <AnimatePresence>
           {menuOpen && (
             <motion.div
+              id="mobile-nav"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
