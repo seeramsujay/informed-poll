@@ -32,8 +32,8 @@ describe('NeuralSync page', () => {
 
   it('renders the Gemini model badge', () => {
     renderPage();
-    // 'Gemini 1.5 Flash' is rendered in the stat chip
-    expect(screen.getByText('Gemini 1.5 Flash')).toBeInTheDocument();
+    // 'Gemini 2.5 Flash' is rendered in the stat chip
+    expect(screen.getByText('Gemini 2.5 Flash')).toBeInTheDocument();
   });
 
   it('renders the Non-Partisan badge', () => {

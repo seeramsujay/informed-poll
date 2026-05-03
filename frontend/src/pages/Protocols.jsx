@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserCheck, MapPin, Navigation, Zap, ChevronDown, ChevronUp, ExternalLink, CheckCircle } from 'lucide-react';
+import { UserCheck, MapPin, Navigation, Zap, ShieldCheck, Lock, ChevronDown, ChevronUp, ExternalLink, CheckCircle } from 'lucide-react';
 import { protocols } from '../data/mock';
 
-const ICON_MAP = { UserCheck, MapPin, Navigation, Zap };
+const ICON_MAP = { UserCheck, MapPin, Navigation, Zap, ShieldCheck, Lock };
 
 const COLOR_MAP = {
   primary: 'var(--primary)',

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Menu, Zap, X, User, Lock, Mail, Eye, EyeOff, LogIn } from 'lucide-react';
+import { Menu, Zap, X, User, Lock, Mail, Eye, EyeOff, LogIn, LogOut } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+import { auth } from '../lib/firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const IdentityModal = ({ onClose }) => {
   const [tab, setTab] = useState('login'); // 'login' | 'register'
@@ -10,22 +13,26 @@ const IdentityModal = ({ onClose }) => {
   const [status, setStatus] = useState(null); // null | 'loading' | 'success' | 'error'
   const [errorMsg, setErrorMsg] = useState('');
 
+  const { loginWithGoogle } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.email || !form.password) return;
     setStatus('loading');
     setErrorMsg('');
 
-    // Simulate auth (Firebase integration placeholder)
-    await new Promise(r => setTimeout(r, 1200));
-    // In prod: call Firebase Auth SDK here
-    // For now, mock success
-    if (form.email.includes('@')) {
+    try {
+      if (tab === 'login') {
+        await signInWithEmailAndPassword(auth, form.email, form.password);
+      } else {
+        await createUserWithEmailAndPassword(auth, form.email, form.password);
+      }
       setStatus('success');
       setTimeout(() => onClose(), 1500);
-    } else {
+    } catch (error) {
+      console.error("Auth error:", error);
       setStatus('error');
-      setErrorMsg('Invalid email format.');
+      setErrorMsg(error.message.replace('Firebase: ', ''));
     }
   };
 
@@ -168,6 +175,19 @@ const IdentityModal = ({ onClose }) => {
               <>{tab === 'login' ? 'Sign In' : 'Create Identity'} <LogIn className="w-5 h-5" /></>
             )}
           </button>
+
+          <div className="relative py-4">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5"></div></div>
+            <div className="relative flex justify-center text-[10px] uppercase tracking-widest"><span className="bg-[#15121b] px-2 text-white/20 font-bold">Or sync with</span></div>
+          </div>
+
+          <button
+            type="button"
+            onClick={loginWithGoogle}
+            className="w-full py-3 rounded-xl border border-white/10 flex items-center justify-center gap-3 text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all"
+          >
+            <User className="w-4 h-4 text-[var(--secondary)]" /> Google Account
+          </button>
         </form>
 
         <p className="text-center text-white/20 text-[10px] leading-relaxed">
@@ -181,10 +201,11 @@ const IdentityModal = ({ onClose }) => {
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [identityOpen, setIdentityOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <>
-      <nav className="glass sticky top-0 z-[100] border-x-0 border-t-0 border-b border-white/10">
+      <nav className="glass sticky top-0 z-[100] border-none shadow-[0_1px_0_0_rgba(255,255,255,0.05)]">
         <div className="max-w-[1800px] mx-auto px-6 lg:px-12 h-24 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-4 group cursor-pointer">
             <div className="bg-[var(--primary)] p-2.5 rounded-xl neon-glow-primary transform group-hover:rotate-12 transition-transform">
@@ -204,6 +225,7 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center gap-12 text-sm font-bold uppercase tracking-widest">
             {[
               { label: 'Candidates', path: '/candidates' },
+              { label: 'Dossier', path: '/dossier' },
               { label: 'Protocols', path: '/protocols' },
               { label: 'Neural-Sync', path: '/neural-sync' },
             ].map(({ label, path }) => (
@@ -221,12 +243,28 @@ const Navbar = () => {
               </NavLink>
             ))}
 
-            <button
-              onClick={() => setIdentityOpen(true)}
-              className="relative overflow-hidden bg-white text-black px-8 py-3 rounded-none font-display text-xl uppercase italic hover:bg-[var(--primary)] hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(110,0,255,0.3)]"
-            >
-              Connect Identity
-            </button>
+            {user ? (
+              <div className="flex items-center gap-6">
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest leading-none">Sync Active</span>
+                  <span className="text-xs text-[var(--secondary)] font-bold truncate max-w-[120px]">{user.email}</span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="bg-white/5 hover:bg-white/10 p-2.5 rounded-xl transition-all group"
+                  title="Disconnect"
+                >
+                  <LogOut className="w-5 h-5 text-white/40 group-hover:text-red-400 transition-colors" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIdentityOpen(true)}
+                className="relative overflow-hidden bg-white text-black px-8 py-3 rounded-none font-display text-xl uppercase italic hover:bg-[var(--primary)] hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(110,0,255,0.3)]"
+              >
+                Connect Identity
+              </button>
+            )}
           </div>
 
           {/* Mobile hamburger */}
@@ -245,11 +283,12 @@ const Navbar = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden glass border-t border-white/5 overflow-hidden"
+              className="lg:hidden glass shadow-[0_-1px_0_0_rgba(255,255,255,0.05)] overflow-hidden"
             >
               <div className="flex flex-col p-6 gap-4">
                 {[
                   { label: 'Candidates', path: '/candidates' },
+                  { label: 'Dossier', path: '/dossier' },
                   { label: 'Protocols', path: '/protocols' },
                   { label: 'Neural-Sync', path: '/neural-sync' },
                 ].map(({ label, path }) => (
@@ -266,12 +305,27 @@ const Navbar = () => {
                     {label}
                   </NavLink>
                 ))}
-                <button
-                  onClick={() => { setMenuOpen(false); setIdentityOpen(true); }}
-                  className="w-full bg-[var(--primary)] text-white py-3 font-display text-xl uppercase italic"
-                >
-                  Connect Identity
-                </button>
+                {user ? (
+                  <div className="flex flex-col gap-4">
+                    <div className="bg-white/5 p-4 rounded-xl">
+                      <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Active Identity</p>
+                      <p className="text-sm text-[var(--secondary)] font-bold">{user.email}</p>
+                    </div>
+                    <button
+                      onClick={logout}
+                      className="w-full bg-white/5 text-red-400 py-3 font-display text-xl uppercase italic border border-red-400/20"
+                    >
+                      Disconnect Sync
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => { setMenuOpen(false); setIdentityOpen(true); }}
+                    className="w-full bg-[var(--primary)] text-white py-3 font-display text-xl uppercase italic"
+                  >
+                    Connect Identity
+                  </button>
+                )}
               </div>
             </motion.div>
           )}

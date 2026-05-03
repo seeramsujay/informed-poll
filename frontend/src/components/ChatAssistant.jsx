@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Loader2, Sparkles, Zap, RotateCcw, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 const QUICK_PROMPTS = [
   "What ID do I need to vote?",
@@ -63,6 +64,7 @@ const MessageBubble = ({ msg }) => {
 };
 
 const ChatAssistant = () => {
+  const { user } = useAuth();
   const [messages, setMessages] = useState([
     { id: 1, text: "Yo! I'm VoteIQ — your non-partisan AI guide to the ballot. Ask me anything: registration deadlines, ID rules, polling places, candidate platforms.", sender: 'ai' }
   ]);
@@ -77,7 +79,7 @@ const ChatAssistant = () => {
     }
   }, [messages, isLoading]);
 
-  const handleSend = async (text) => {
+  const handleSend = useCallback(async (text) => {
     const msg = typeof text === 'string' ? text : input;
     if (!msg.trim() || isLoading) return;
 
@@ -86,9 +88,16 @@ const ChatAssistant = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
+      const headers = { 'Content-Type': 'application/json' };
+      if (user) {
+        const token = await user.getIdToken();
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const apiBase = import.meta.env.VITE_API_BASE_URL || '';
+      const res = await fetch(`${apiBase}/api/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ message: msg }),
       });
       const data = await res.json();
@@ -98,7 +107,14 @@ const ChatAssistant = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, isLoading, user]);
+
+  // Wire up sidebar prompt injection from NeuralSync page
+  useEffect(() => {
+    const handler = (e) => handleSend(e.detail);
+    window.addEventListener('voteiq:prompt', handler);
+    return () => window.removeEventListener('voteiq:prompt', handler);
+  }, [handleSend]);
 
   const reset = () => {
     setMessages([{ id: 1, text: "Fresh session. What do you want to know?", sender: 'ai' }]);
@@ -107,7 +123,7 @@ const ChatAssistant = () => {
   return (
     <div className="glass-card flex flex-col h-[620px] border-none shadow-2xl">
       {/* Header */}
-      <div className="p-4 flex items-center gap-3 bg-white/5 border-b border-white/5 flex-shrink-0">
+      <div className="p-4 flex items-center gap-3 bg-white/5 shadow-[0_1px_0_0_rgba(255,255,255,0.05)] flex-shrink-0">
         <motion.div
           className="w-2 h-2 rounded-full bg-[var(--secondary)]"
           animate={{ opacity: [1, 0.3, 1] }}
@@ -142,7 +158,7 @@ const ChatAssistant = () => {
       </div>
 
       {/* Input */}
-      <div className="p-4 bg-white/5 border-t border-white/5 flex-shrink-0">
+      <div className="p-4 bg-white/5 shadow-[0_-1px_0_0_rgba(255,255,255,0.05)] flex-shrink-0">
         <form
           onSubmit={e => { e.preventDefault(); handleSend(); }}
           className="relative flex gap-2"
@@ -154,7 +170,7 @@ const ChatAssistant = () => {
             onChange={e => setInput(e.target.value)}
             placeholder="Ask about voting rules, deadlines, IDs..."
             disabled={isLoading}
-            className="flex-1 bg-[#100d16] border border-neutral-800 rounded-xl py-3 pl-4 pr-4 text-sm text-white focus:ring-1 focus:ring-[var(--secondary)] focus:border-[var(--secondary)] transition-all outline-none disabled:opacity-50"
+            className="flex-1 bg-[#100d16] border-none shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] rounded-xl py-3 pl-4 pr-4 text-sm text-white focus:ring-1 focus:ring-[var(--secondary)] transition-all outline-none disabled:opacity-50"
           />
           <button
             type="submit"

@@ -1,18 +1,19 @@
-# Future Steps - Informed Poll
+# Future Steps: Informed Poll
 
-## Technical Debt
-- [ ] Implement robust error handling for LanceDB connection loss.
-- [ ] Setup unit tests using `pytest` and `httpx`.
-- [ ] Add logging configuration for Cloud Run (Cloud Logging integration).
-- [ ] Resolve Firestore ADC initialization error in local environment.
+## Priority 1: Performance & UX
+- [ ] **Optimize Cold Starts**: Implement lazy loading for Gemini models and use a smaller Python runtime.
+- [ ] **Offline Mode**: Cache candidate cards and basic civic info using Service Workers.
+- [ ] **Accessibility Audit**: Ensure 100/100 Lighthouse score for accessibility.
 
-## Feature Backlog
-- [ ] **Multi-modal Polls**: Support for images/video context via Gemini.
-- [ ] **Expert Insights**: A dedicated section in polls for verified expert summaries.
-- [ ] **Result Visualization**: Dynamic charts for poll results (Backend aggregation).
-- [ ] **Global Scaling**: Multi-region Firestore/Cloud Run deployment strategy.
+## Priority 2: Data Expansion
+- [ ] **Multilingual Support**: Add Hindi and regional language support for the AI assistant.
+- [ ] **Live Election Results**: Integrate a real-time feed for election counting day.
+- [ ] **Candidate Deep Dive**: Add more metadata (education, criminal records, assets) from MyNeta or similar APIs.
 
-## Hackathon Polish
-- [ ] Detailed `README.md` with architecture diagrams.
-- [ ] Demo script for judges.
-- [ ] Cost analysis (Scaling to zero benefits).
+## Priority 3: Scale
+- [ ] **Kubernetes Migration**: If traffic exceeds Cloud Run limits, migrate to GKE.
+- [ ] **Distributed Vector Search**: Explore LanceDB Cloud for multi-region RAG.
+
+## Priority 4: Community
+- [ ] **Open Data API**: Allow other civic tech apps to query our grounded RAG engine.
+- [ ] **Youth Outreach**: Partner with colleges to integrate Informed Poll into civic education programs.

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Candidates from './pages/Candidates';
 import Protocols from './pages/Protocols';
 import NeuralSync from './pages/NeuralSync';
+import Dossier from './pages/Dossier';
 
 function App() {
   return (
@@ -30,6 +31,9 @@ function App() {
           <Route path="/candidates" element={<Candidates />} />
           <Route path="/protocols" element={<Protocols />} />
           <Route path="/neural-sync" element={<NeuralSync />} />
+          <Route path="/dossier" element={<Dossier />} />
+          {/* Catch-all: redirect unknown paths to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
 

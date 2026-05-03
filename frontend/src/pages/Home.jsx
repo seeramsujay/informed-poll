@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import Timeline from '../components/Timeline';
@@ -7,7 +8,6 @@ import ChatAssistant from '../components/ChatAssistant';
 
 const Home = () => {
   const [completedSteps, setCompletedSteps] = useState([true, false, false, false]);
-  const [candidateIndex, setCandidateIndex] = useState(0);
 
   return (
     <main className="relative z-10">
@@ -46,7 +46,7 @@ const Home = () => {
             
             <div className="relative group">
               <div className="absolute -inset-4 bg-gradient-to-r from-[var(--secondary)]/20 to-transparent blur-3xl group-hover:opacity-100 opacity-0 transition-opacity" />
-              <CandidateStack index={candidateIndex} setIndex={setCandidateIndex} />
+              <CandidateStack />
             </div>
           </motion.section>
           
@@ -71,6 +71,30 @@ const Home = () => {
             <ChatAssistant />
           </motion.section>
         </div>
+
+        <motion.section
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="py-24 border-t border-white/5"
+        >
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <h2 className="font-display text-6xl md:text-8xl uppercase italic tracking-tighter leading-none">
+              CIVIC <span className="text-[var(--primary)]">INTELLIGENCE</span>
+            </h2>
+            <p className="text-white/50 text-lg max-w-2xl mx-auto">
+              Access the high-fidelity deep dive on the Indian electoral matrix. From EVM mechanics to voter rights, it's all here.
+            </p>
+            <div className="pt-8">
+              <Link 
+                to="/dossier" 
+                className="inline-block px-12 py-5 bg-white text-black font-display text-2xl uppercase italic hover:bg-[var(--primary)] hover:text-white transition-all transform hover:-translate-y-1"
+              >
+                Open Dossier
+              </Link>
+            </div>
+          </div>
+        </motion.section>
       </div>
     </main>
   );

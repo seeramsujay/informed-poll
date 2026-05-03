@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, ChevronDown, ChevronUp, ExternalLink, Check, Zap } from 'lucide-react';
 import { candidates } from '../data/mock';
+import { useAuth } from '../context/AuthContext';
 
 const PolicyBar = ({ label, score, color }) => (
   <div className="space-y-1.5">
@@ -115,7 +116,7 @@ const CandidateCard = ({ candidate, onSwipe }) => {
         <div className="flex gap-3 pt-1">
           <button
             onClick={(e) => { e.stopPropagation(); onSwipe('left'); }}
-            className="flex-1 glass py-3.5 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-400/10 transition-colors border border-red-400/20"
+            className="flex-1 glass py-3.5 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-400/10 transition-colors border-none shadow-[inset_0_0_0_1px_rgba(248,113,113,0.1)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -133,29 +134,60 @@ const CandidateCard = ({ candidate, onSwipe }) => {
 };
 
 const CandidateStack = () => {
-  const [index, setIndex] = useState(0);
   const [ballot, setBallot] = useState([]);
   const [dismissed, setDismissed] = useState([]);
   const [done, setDone] = useState(false);
+  const { user } = useAuth();
 
   const remaining = candidates.filter(c => !ballot.includes(c.id) && !dismissed.includes(c.id));
   const current = remaining[0];
 
   const handleSwipe = (direction) => {
     if (!current) return;
-    if (direction === 'right') {
-      setBallot(prev => [...prev, current.id]);
-    } else {
-      setDismissed(prev => [...prev, current.id]);
+    const newBallot = direction === 'right' ? [...ballot, current.id] : ballot;
+    const newDismissed = direction === 'left' ? [...dismissed, current.id] : dismissed;
+
+    if (direction === 'right') setBallot(newBallot);
+    else setDismissed(newDismissed);
+
+    // Check if this was the last card
+    if (remaining.length <= 1) {
+      setDone(true);
+      // Save ballot immediately with up-to-date data (avoids stale closure)
+      if (direction === 'right' && newBallot.length > 0) {
+        persistBallot(newBallot, user);
+      } else if (direction === 'left' && ballot.length > 0) {
+        persistBallot(ballot, user);
+      }
     }
-    if (remaining.length <= 1) setDone(true);
+  };
+
+  const persistBallot = async (candidateIds, currentUser) => {
+    try {
+      const userId = currentUser?.uid || localStorage.getItem('voteiq_user_id') || `user_${Math.random().toString(36).substr(2, 9)}`;
+      if (!localStorage.getItem('voteiq_user_id')) localStorage.setItem('voteiq_user_id', userId);
+
+      const headers = { 'Content-Type': 'application/json' };
+      if (currentUser) {
+        const token = await currentUser.getIdToken();
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const apiBase = import.meta.env.VITE_API_BASE_URL || '';
+      await fetch(`${apiBase}/api/ballots`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ user_id: userId, candidate_ids: candidateIds })
+      });
+    } catch (err) {
+      console.error('Failed to save ballot:', err);
+    }
   };
 
   const reset = () => {
     setBallot([]);
     setDismissed([]);
     setDone(false);
-    setIndex(0);
   };
 
   if (done || remaining.length === 0) {

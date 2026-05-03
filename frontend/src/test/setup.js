@@ -23,6 +23,30 @@ vi.mock('framer-motion', () => {
   };
 });
 
+// Mock Firebase
+vi.mock('firebase/app', () => ({
+  initializeApp: vi.fn(),
+}));
+
+vi.mock('firebase/auth', () => ({
+  getAuth: vi.fn(() => ({})),
+  onAuthStateChanged: vi.fn(() => vi.fn()), // returns unsubscribe fn
+  signInWithPopup: vi.fn(),
+  GoogleAuthProvider: vi.fn(),
+  signOut: vi.fn(),
+  signInWithEmailAndPassword: vi.fn((auth, email) => {
+    if (email === 'notanemail') {
+      return Promise.reject({ message: 'Firebase: Invalid email format', code: 'auth/invalid-email' });
+    }
+    return Promise.resolve({ user: { uid: 'mock-uid' } });
+  }),
+  createUserWithEmailAndPassword: vi.fn(),
+}));
+
+vi.mock('firebase/firestore', () => ({
+  getFirestore: vi.fn(),
+}));
+
 // Mock react-router-dom Link / NavLink / useNavigate
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
@@ -36,6 +60,17 @@ vi.mock('react-router-dom', async () => {
     },
   };
 });
+
+// Mock AuthContext
+vi.mock('../context/AuthContext.jsx', () => ({
+  useAuth: () => ({
+    user: null,
+    loading: false,
+    loginWithGoogle: vi.fn(),
+    logout: vi.fn(),
+  }),
+  AuthProvider: ({ children }) => children,
+}));
 
 // Mock fetch globally
 global.fetch = vi.fn();

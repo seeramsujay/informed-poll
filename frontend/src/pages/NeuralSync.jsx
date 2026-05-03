@@ -13,7 +13,7 @@ const QUICK_PROMPTS = [
 ];
 
 const stats = [
-  { icon: Brain, label: 'Model', value: 'Gemini 1.5 Flash', color: 'var(--primary)' },
+  { icon: Brain, label: 'Model', value: 'Gemini 2.5 Flash', color: 'var(--primary)' },
   { icon: Shield, label: 'Stance', value: 'Non-Partisan', color: 'var(--secondary)' },
   { icon: Wifi, label: 'Source', value: 'Live API', color: 'var(--accent)' },
 ];
@@ -79,7 +79,7 @@ const NeuralSync = () => {
               <ol className="space-y-2">
                 {[
                   'Your message → FastAPI backend',
-                  'Backend → Gemini 1.5 Flash',
+                  'Backend → Gemini 2.5 Flash',
                   'Response streamed back',
                   '100% non-partisan grounding',
                 ].map((s, i) => (

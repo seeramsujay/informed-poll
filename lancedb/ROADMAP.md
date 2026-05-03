@@ -29,14 +29,19 @@ Interactive election guide with swippable candidate cards, real-time timelines, 
 - [x] Verified local full-stack execution (Vite + FastAPI).
 - [/] Implement full candidate swipe logic in `CandidateStack`.
 - [/] Connect `ChatAssistant` to local mock responses.
+- [x] Integrate comprehensive ECI content via `Dossier` page.
 - [ ] Build `RegistrationStepper` component.
 
-### Phase 2: Google Services Integration
-- [ ] Connect to Firestore for saving "Personal Ballots".
-- [ ] Integrate Gemini API for real AI chat.
-- [ ] Deploy container to Cloud Run.
+### Phase 2: Google Services Integration [COMPLETED]
+- [x] Connect to Firestore for saving "Personal Ballots".
+- [x] Integrate Gemini API (Upgraded to gemini-2.5-flash) for real AI chat.
+- [x] Firebase Auth on frontend (Email + Google OAuth).
+- [x] Backend token verification with graceful fallback.
+- [x] Deploy container to Cloud Run.
+  - Backend: https://informed-poll-backend-51884867643.us-central1.run.app
+  - Frontend: https://informed-poll-frontend-51884867643.us-central1.run.app
 
 ### Phase 3: Final Polish
-- [ ] E2E testing with Vitest.
+- [x] E2E testing with Vitest (91/91 passed).
 - [ ] Performance audit for Cloud Run cold starts.
 - [ ] Accessibility review (ARIA labels, keyboard nav).
