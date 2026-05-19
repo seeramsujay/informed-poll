@@ -12,3 +12,4 @@ lancedb/poll_context/
 .pytest_cache/
 .DS_Store
 .agent/
+.vercel/
