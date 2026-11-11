@@ -13,3 +13,5 @@ lancedb/poll_context/
 .DS_Store
 .agent/
 .vercel/
+__pycache__/
+*.pyc
