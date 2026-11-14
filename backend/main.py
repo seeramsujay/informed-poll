@@ -1,19 +1,16 @@
 import os
-from fastapi import FastAPI, HTTPException, Depends, Request
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel, field_validator
-from typing import List, Optional
-import firebase_admin
-from firebase_admin import credentials, firestore, auth
-import lancedb
-import pandas as pd
-from dotenv import load_dotenv
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.middleware.cors import CORSMiddleware
-import google.generativeai as genai
-from functools import lru_cache
 import time
 from collections import defaultdict
+
+import firebase_admin
+import google.generativeai as genai
+import lancedb
+from dotenv import load_dotenv
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from firebase_admin import auth, credentials, firestore
+from pydantic import BaseModel, field_validator
 
 # Load env
 load_dotenv()
@@ -41,6 +38,7 @@ app.add_middleware(
 _rate_store: dict = defaultdict(list)
 RATE_LIMIT = int(os.getenv("RATE_LIMIT_PER_MINUTE", "30"))
 
+
 def check_rate_limit(ip: str) -> bool:
     """Return True if allowed, False if rate-limited."""
     now = time.time()
@@ -51,10 +49,14 @@ def check_rate_limit(ip: str) -> bool:
     _rate_store[ip].append(now)
     return True
 
+
 # ── Security ──────────────────────────────────────
 security = HTTPBearer(auto_error=False)
 
-async def get_current_user(res: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+
+async def get_current_user(
+    res: HTTPAuthorizationCredentials | None = Depends(security),
+):
     """Return decoded Firebase token or None if no/invalid token."""
     if res is None:
         return None
@@ -64,12 +66,14 @@ async def get_current_user(res: Optional[HTTPAuthorizationCredentials] = Depends
     except Exception:
         return None
 
-async def require_user(res: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+
+async def require_user(res: HTTPAuthorizationCredentials | None = Depends(security)):
     """Strict auth — raises 401 if not authenticated."""
     user = await get_current_user(res)
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication required")
     return user
+
 
 # ── Firebase ──────────────────────────────────────
 if not firebase_admin._apps:
@@ -81,7 +85,7 @@ if not firebase_admin._apps:
             cred = credentials.Certificate(cred_path)
             firebase_admin.initialize_app(cred)
         elif project_id:
-            firebase_admin.initialize_app(options={'projectId': project_id})
+            firebase_admin.initialize_app(options={"projectId": project_id})
         else:
             firebase_admin.initialize_app()
     except Exception as e:
@@ -108,6 +112,7 @@ except Exception as e:
 # ── Gemini singleton ──────────────────────────────
 _gemini_configured = False
 
+
 def _ensure_gemini():
     """Configure Gemini client once at startup, not per-request."""
     global _gemini_configured
@@ -118,9 +123,11 @@ def _ensure_gemini():
             _gemini_configured = True
     return _gemini_configured
 
+
 @app.on_event("startup")
 async def startup_event():
     _ensure_gemini()
+
 
 def get_embedding(text: str):
     if not _ensure_gemini():
@@ -129,12 +136,13 @@ def get_embedding(text: str):
         result = genai.embed_content(
             model="models/gemini-embedding-001",
             content=text,
-            task_type="retrieval_query"
+            task_type="retrieval_query",
         )
-        return result['embedding']
+        return result["embedding"]
     except Exception as e:
         print(f"Embedding error: {e}")
         return None
+
 
 def retrieve_context(query: str, limit: int = 3) -> str:
     global _lancedb_table
@@ -153,10 +161,12 @@ def retrieve_context(query: str, limit: int = 3) -> str:
             return ""
 
         results = _lancedb_table.search(vector).limit(limit).to_pandas()
-        context_str = "\n".join([
-            f"[{row['category'].upper()}: {row['title']}] {row['text']}"
-            for _, row in results.iterrows()
-        ])
+        context_str = "\n".join(
+            [
+                f"[{row['category'].upper()}: {row['title']}] {row['text']}"
+                for _, row in results.iterrows()
+            ]
+        )
         return context_str
     except Exception as e:
         print(f"Context retrieval error: {e}")
@@ -165,38 +175,46 @@ def retrieve_context(query: str, limit: int = 3) -> str:
 
 # ── Models ────────────────────────────────────────
 class Poll(BaseModel):
-    id: Optional[str] = None
+    id: str | None = None
     question: str
-    options: List[str]
+    options: list[str]
     context: str
+
 
 class Vote(BaseModel):
     poll_id: str
     option_index: int
 
+
 class Ballot(BaseModel):
     user_id: str
-    candidate_ids: List[str]
-    timestamp: Optional[float] = None
+    candidate_ids: list[str]
+    timestamp: float | None = None
+
 
 class ChatRequest(BaseModel):
     message: str
 
-    @field_validator('message')
+    @field_validator("message")
     @classmethod
     def message_not_empty(cls, v: str) -> str:
         v = v.strip()
         if not v:
-            raise ValueError('Message cannot be empty')
+            raise ValueError("Message cannot be empty")
         if len(v) > 2000:
-            raise ValueError('Message too long (max 2000 chars)')
+            raise ValueError("Message too long (max 2000 chars)")
         return v
 
 
 # ── Routes ────────────────────────────────────────
 @app.get("/")
 async def root():
-    return {"message": "Informed Poll API is running", "platform": "Google Cloud Run", "version": "2.0.0"}
+    return {
+        "message": "Informed Poll API is running",
+        "platform": "Google Cloud Run",
+        "version": "2.0.0",
+    }
+
 
 @app.get("/health")
 async def health():
@@ -207,45 +225,60 @@ async def health():
         "gemini": _gemini_configured,
     }
 
+
 from fastapi import APIRouter
+
 api_router = APIRouter(prefix="/api")
 
-@api_router.get("/polls", response_model=List[Poll])
+
+@api_router.get("/polls", response_model=list[Poll])
 async def get_polls():
     if not db:
         return []
-    polls_ref = db.collection('polls')
+    polls_ref = db.collection("polls")
     docs = polls_ref.stream()
     return [Poll(id=doc.id, **doc.to_dict()) for doc in docs]
+
 
 @api_router.post("/polls", response_model=Poll)
 async def create_poll(poll: Poll):
     if not db:
         raise HTTPException(status_code=503, detail="DB offline")
-    doc_ref = db.collection('polls').document()
-    poll_data = poll.model_dump(exclude={'id'})  # Pydantic v2
+    doc_ref = db.collection("polls").document()
+    poll_data = poll.model_dump(exclude={"id"})  # Pydantic v2
     doc_ref.set(poll_data)
     return Poll(id=doc_ref.id, **poll_data)
+
 
 @api_router.post("/votes")
 async def submit_vote(vote: Vote, user: dict = Depends(require_user)):
     if not db:
         raise HTTPException(status_code=503, detail="DB offline")
     try:
-        uid = user['uid']
-        vote_ref = db.collection('polls').document(vote.poll_id).collection('votes').document(uid)
-        vote_ref.set({
-            'option_index': vote.option_index,
-            'timestamp': firestore.SERVER_TIMESTAMP
-        })
+        uid = user["uid"]
+        vote_ref = (
+            db.collection("polls")
+            .document(vote.poll_id)
+            .collection("votes")
+            .document(uid)
+        )
+        vote_ref.set(
+            {"option_index": vote.option_index, "timestamp": firestore.SERVER_TIMESTAMP}
+        )
         return {"status": "success", "user": uid}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @api_router.post("/ballots")
-async def save_ballot(ballot: Ballot, user: Optional[dict] = Depends(get_current_user)):
-    uid = user['uid'] if user else (
-        ballot.user_id or f"anon_{ballot.candidate_ids[0] if ballot.candidate_ids else 'unknown'}"
+async def save_ballot(ballot: Ballot, user: dict | None = Depends(get_current_user)):
+    uid = (
+        user["uid"]
+        if user
+        else (
+            ballot.user_id
+            or f"anon_{ballot.candidate_ids[0] if ballot.candidate_ids else 'unknown'}"
+        )
     )
 
     if not db:
@@ -253,24 +286,31 @@ async def save_ballot(ballot: Ballot, user: Optional[dict] = Depends(get_current
         return {"status": "mock_success", "uid": uid}
 
     try:
-        doc_ref = db.collection('ballots').document(uid)
-        doc_ref.set({
-            'candidate_ids': ballot.candidate_ids,
-            'timestamp': firestore.SERVER_TIMESTAMP
-        })
+        doc_ref = db.collection("ballots").document(uid)
+        doc_ref.set(
+            {
+                "candidate_ids": ballot.candidate_ids,
+                "timestamp": firestore.SERVER_TIMESTAMP,
+            }
+        )
         return {"status": "success", "uid": uid}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @api_router.post("/chat")
 async def chat_with_gemini(request: ChatRequest, req: Request):
     # Rate limiting
     client_ip = req.client.host if req.client else "unknown"
     if not check_rate_limit(client_ip):
-        raise HTTPException(status_code=429, detail="Too many requests. Please slow down.")
+        raise HTTPException(
+            status_code=429, detail="Too many requests. Please slow down."
+        )
 
     if not _ensure_gemini():
-        return {"reply": "Neural Sync Offline: Please set GEMINI_API_KEY to connect to the collective."}
+        return {
+            "reply": "Neural Sync Offline: Please set GEMINI_API_KEY to connect to the collective."
+        }
 
     try:
         system_instruction = (
@@ -290,19 +330,22 @@ async def chat_with_gemini(request: ChatRequest, req: Request):
             )
 
         model = genai.GenerativeModel(
-            model_name="gemini-2.5-flash",
-            system_instruction=system_instruction
+            model_name="gemini-2.5-flash", system_instruction=system_instruction
         )
         response = model.generate_content(enriched_prompt)
         return {"reply": response.text}
 
     except Exception as e:
         print(f"Error calling Gemini: {e}")
-        return {"reply": "Connection unstable. Collective consciousness temporarily unavailable."}
+        return {
+            "reply": "Connection unstable. Collective consciousness temporarily unavailable."
+        }
+
 
 app.include_router(api_router)
 
 if __name__ == "__main__":
     import uvicorn
+
     port = int(os.environ.get("PORT", 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)
