@@ -1,5 +1,4 @@
 import sys
-import types
 from unittest.mock import MagicMock
 
 for mod_name in [
@@ -13,7 +12,7 @@ for mod_name in [
     "google.cloud",
     "google.cloud.firestore",
     "google.cloud.aiplatform",
-    "pandas"
+    "pandas",
 ]:
     if mod_name not in sys.modules:
         m = MagicMock()
