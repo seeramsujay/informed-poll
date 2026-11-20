@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C16" />
+      <stop offset="50%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#050810" />
+    </linearGradient>
+
+    <!-- Civic Intelligence Tricolor Gradient -->
+    <linearGradient id="civic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9933" />
+      <stop offset="50%" stop-color="#000080" />
+      <stop offset="100%" stop-color="#138808" />
+    </linearGradient>
+
+    <!-- Gemini AI Electric Gradient -->
+    <linearGradient id="gemini-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4285F4" />
+      <stop offset="50%" stop-color="#9B72CF" />
+      <stop offset="100%" stop-color="#22D3EE" />
+    </linearGradient>
+
+    <linearGradient id="core-glow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4285F4" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#138808" stop-opacity="0.05" />
+    </linearGradient>
+
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="subtle-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="800" rx="160" fill="url(#bg-grad)" />
+  <rect width="796" height="796" x="2" y="2" rx="158" fill="none" stroke="#1E293B" stroke-width="2" />
+
+  <!-- Civic Compass & Polling Reticle -->
+  <g opacity="0.16" stroke="#00D2FF" stroke-width="1.5">
+    <circle cx="400" cy="380" r="140" fill="none" stroke-dasharray="6 6" />
+    <circle cx="400" cy="380" r="230" fill="none" stroke-dasharray="8 8" />
+    <line x1="400" y1="100" x2="400" y2="660" stroke-dasharray="4 8" />
+    <line x1="120" y1="380" x2="680" y2="380" stroke-dasharray="4 8" />
+  </g>
+
+  <!-- Swipeable Candidate Ballot Card Stack -->
+  <rect x="330" y="200" width="220" height="300" rx="20" transform="rotate(12, 440, 350)" fill="#1E293B" stroke="#138808" stroke-width="3" opacity="0.5" />
+  <rect x="250" y="200" width="220" height="300" rx="20" transform="rotate(-12, 360, 350)" fill="#1E293B" stroke="#FF9933" stroke-width="3" opacity="0.5" />
+
+  <!-- Foreground Main Ballot Card -->
+  <rect x="290" y="190" width="220" height="320" rx="22" fill="#0F172A" stroke="url(#gemini-grad)" stroke-width="8" filter="url(#glow)" />
+
+  <!-- Neural VoteIQ Hub -->
+  <g filter="url(#subtle-glow)">
+    <rect x="330" y="230" width="140" height="12" rx="6" fill="#38BDF8" opacity="0.8" />
+    
+    <!-- Gemini 4-Point AI Sparkle -->
+    <path d="M 400 300 Q 400 360, 460 360 Q 400 360, 400 420 Q 400 360, 340 360 Q 400 360, 400 300 Z" fill="url(#gemini-grad)" filter="url(#glow)" />
+
+    <!-- Civic Verification Checkmark -->
+    <path d="M 370 360 L 390 380 L 430 335" fill="none" stroke="#F8FAFC" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <!-- Ashoka Chakra 24-Spoke Subtle Symbol Ring -->
+  <circle cx="400" cy="360" r="48" fill="none" stroke="#38BDF8" stroke-width="2" stroke-dasharray="2 10" opacity="0.7" />
+
+  <!-- Bottom Swipe Direction Indicators -->
+  <g fill="#138808" filter="url(#subtle-glow)">
+    <polygon points="480,480 470,470 470,490" />
+    <polygon points="495,480 485,470 485,490" />
+  </g>
+  <g fill="#FF9933" filter="url(#subtle-glow)">
+    <polygon points="320,480 330,470 330,490" />
+    <polygon points="305,480 315,470 315,490" />
+  </g>
+
+  <!-- Typography -->
+  <text x="400" y="685" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" fill="#F8FAFC" letter-spacing="4">
+    INFORMED<tspan fill="#38BDF8">POLL</tspan>
+  </text>
+  <text x="400" y="722" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#94A3B8" letter-spacing="3">
+    AI ELECTION COMPANION &amp; CIVIC CLARITY
+  </text>
+</svg>
